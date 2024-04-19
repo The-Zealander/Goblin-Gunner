@@ -24,8 +24,9 @@ def draw_text(surface, text, color, x, y):
     text_rect.topleft = (x, y)
     surface.blit(text_surface, text_rect)
 
+
 # Function to create buttons
-class Button:
+class Quit_Button:
     def __init__(self, text, position, size, color=(0, 255, 0), hover_color=(0, 200, 0), font_size=30):
         self.text = text
         self.position = position
@@ -52,6 +53,7 @@ class Button:
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if self.hovered():
                 self.clicked = True
+                print("you clicked quit")
         elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             if self.clicked and self.hovered():
                 self.clicked = False
@@ -59,7 +61,10 @@ class Button:
             self.clicked = False
         return False
 
-button = Button("Click Me", (100, 100), (200, 50))
+
+quit_button = Quit_Button("Exit", (100, 100), (200, 50))
+
+
 # Main function
 def main():
     # Set up the screen
@@ -73,15 +78,18 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            quit_button.handle_event(event)
+
 
         # Clear the screen
         screen.fill(WHITE)
 
         # Draw buttons
-        #draw_button(screen, "Start", 100, 100, 200, 50)
-        #draw_button(screen, "Options", 100, 200, 200, 50)
-        #draw_button(screen, "Quit", 100, 300, 200, 50)
-        button.draw(screen)
+        # play_button.draw(screen)
+        # settings_button.draw(screen)
+        # credits_button.draw(screen)
+        quit_button.draw(screen)
+
         # Version indicator
         draw_text(screen, "Version 1.0", BLACK, 10, SCREEN_HEIGHT - 40)
 
@@ -91,6 +99,7 @@ def main():
     # Quit pygame
     pygame.quit()
     sys.exit()
+
 
 if __name__ == "__main__":
     main()
