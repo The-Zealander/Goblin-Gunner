@@ -15,14 +15,17 @@ GRAY = (200, 200, 200)
 BUTTON_COLOR_INACTIVE = (50, 250, 50)
 BUTTON_COLOR_ACTIVE = (100, 200, 100)
 
-# Set font
-font = pygame.font.SysFont(None, 36)
+# define different fonts
+version_font = pygame.font.SysFont(None, 20)
 
 #Other variables or constatnts
-Version=1.0
+Menu_Version = "0.2"
+Settings_Version = "0.0"
+Game_Version = "0.0"
+
 # Function to draw text on screen
 def draw_text(surface, text, color, x, y):
-    text_surface = font.render(text, True, color)
+    text_surface = version_font.render(text, True, color)
     text_rect = text_surface.get_rect()
     text_rect.topleft = (x, y)
     surface.blit(text_surface, text_rect)
@@ -170,6 +173,7 @@ class Quit_Button:
             if self.hovered():
                 self.clicked = True
                 print("you clicked quit")
+                sys.exit()
         elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             if self.clicked and self.hovered():
                 self.clicked = False
@@ -211,9 +215,11 @@ def main():
         unknown_button.draw(screen)
         quit_button.draw(screen)
 
-        # Version indicator
-        draw_text(screen, "Version 1.0", BLACK, 10, SCREEN_HEIGHT - 40)
-
+        # Version indicators
+        draw_text(screen, f"Game Version {Game_Version}", BLACK, 10, SCREEN_HEIGHT - 75)
+        draw_text(screen, f"Settings Version {Settings_Version}", BLACK, 10, SCREEN_HEIGHT - 50)
+        draw_text(screen, f"Menu Version {Menu_Version}", BLACK, 10, SCREEN_HEIGHT - 25)
+        #make ^ this dependant on the "Version" constant.
         # Update the display
         pygame.display.flip()
 
