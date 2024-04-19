@@ -18,7 +18,8 @@ BUTTON_COLOR_ACTIVE = (100, 200, 100)
 # Set font
 font = pygame.font.SysFont(None, 36)
 
-
+#Other variables or constatnts
+Version=1.0
 # Function to draw text on screen
 def draw_text(surface, text, color, x, y):
     text_surface = font.render(text, True, color)
