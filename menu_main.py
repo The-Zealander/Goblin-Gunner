@@ -1,26 +1,23 @@
 import pygame
 import sys
-from main import define_colors
-from main import resolusion
+from main import resolusion, version_keys
 
 # Initialize pygame
 pygame.init()
 
-# Set screen dimensions
+# call on functions
 screen_resolusion = resolusion()
-#SCREEN_WIDTH = 1280
-#SCREEN_HEIGHT = 720
+prgram_state, program_version, Menu_Version, Settings_Version, Gameplay_Version, Title_Version = version_keys()
 
+#button colors
 BUTTON_COLOR_INACTIVE = "NAVY"
 BUTTON_COLOR_ACTIVE = "BLUE"
 
 # define different fonts
 version_font = pygame.font.SysFont(None, 20)
 
+
 # Other variables or constants
-Menu_Version = "0.2"
-Settings_Version = "0.0"
-Game_Version = "0.0"
 
 
 # Function to draw text on screen
@@ -218,10 +215,9 @@ def main():
         quit_button.draw(screen)
 
         # Version indicators
-        draw_text(screen, f"Game Version {Game_Version}", "BLACK", 10, screen_resolusion[1] - 75)
-        draw_text(screen, f"Settings Version {Settings_Version}", "BLACK", 10, screen_resolusion[1] - 50)
-        draw_text(screen, f"Menu Version {Menu_Version}", "BLACK", 10, screen_resolusion[1] - 25)
-        # make ^ this dependent on the "Version" constant.
+        draw_text(screen, f"Game Version: {prgram_state} {Gameplay_Version}", "BLACK", 10, screen_resolusion[1] - 75)
+        draw_text(screen, f"Settings Version: {prgram_state} {Settings_Version}", "BLACK", 10, screen_resolusion[1] - 50)
+        draw_text(screen, f"Menu Version: {prgram_state} {Menu_Version}", "BLACK", 10, screen_resolusion[1] - 25)
         # Update the display
         pygame.display.flip()
 
