@@ -1,13 +1,15 @@
 import pygame
 import sys
 from main import define_colors
+from main import resolusion
 
 # Initialize pygame
 pygame.init()
 
 # Set screen dimensions
-SCREEN_WIDTH = 1280
-SCREEN_HEIGHT = 720
+screen_resolusion = resolusion()
+#SCREEN_WIDTH = 1280
+#SCREEN_HEIGHT = 720
 
 BUTTON_COLOR_INACTIVE = "NAVY"
 BUTTON_COLOR_ACTIVE = "BLUE"
@@ -15,7 +17,7 @@ BUTTON_COLOR_ACTIVE = "BLUE"
 # define different fonts
 version_font = pygame.font.SysFont(None, 20)
 
-# Other variables or constatnts
+# Other variables or constants
 Menu_Version = "0.2"
 Settings_Version = "0.0"
 Game_Version = "0.0"
@@ -180,16 +182,16 @@ class Quit_Button:
         return False
 
 
-play_button = Play_Button("START", (SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT - 330), (200, 50))
-settings_button = Settings_Button("SETTINGS", (SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT - 270), (200, 50))
-unknown_button = Unknown_Button("UNKNOWN", (SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT - 210), (200, 50))
-quit_button = Quit_Button("EXIT", (SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT - 150), (200, 50))
+play_button = Play_Button("START", (screen_resolusion[0] / 2 - 100, screen_resolusion[1] - 330), (200, 50))
+settings_button = Settings_Button("SETTINGS", (screen_resolusion[0] / 2 - 100, screen_resolusion[1] - 270), (200, 50))
+unknown_button = Unknown_Button("UNKNOWN", (screen_resolusion[0] / 2 - 100, screen_resolusion[1] - 210), (200, 50))
+quit_button = Quit_Button("EXIT", (screen_resolusion[0] / 2 - 100, screen_resolusion[1] - 150), (200, 50))
 
 
 # Main function
 def main():
     # Set up the screen
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    screen = pygame.display.set_mode((screen_resolusion[0], screen_resolusion[1]))
     pygame.display.set_caption("Main_Menu")
     icon = pygame.image.load("8bitsword.png")
     pygame.display.set_icon(icon)
@@ -216,10 +218,10 @@ def main():
         quit_button.draw(screen)
 
         # Version indicators
-        draw_text(screen, f"Game Version {Game_Version}", "BLACK", 10, SCREEN_HEIGHT - 75)
-        draw_text(screen, f"Settings Version {Settings_Version}", "BLACK", 10, SCREEN_HEIGHT - 50)
-        draw_text(screen, f"Menu Version {Menu_Version}", "BLACK", 10, SCREEN_HEIGHT - 25)
-        # make ^ this dependant on the "Version" constant.
+        draw_text(screen, f"Game Version {Game_Version}", "BLACK", 10, screen_resolusion[1] - 75)
+        draw_text(screen, f"Settings Version {Settings_Version}", "BLACK", 10, screen_resolusion[1] - 50)
+        draw_text(screen, f"Menu Version {Menu_Version}", "BLACK", 10, screen_resolusion[1] - 25)
+        # make ^ this dependent on the "Version" constant.
         # Update the display
         pygame.display.flip()
 

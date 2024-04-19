@@ -1,9 +1,15 @@
 import pygame
 import sys
 
-# Set screen dimensions
+# define resolusion
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
+monitor = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+
+def resolusion():
+    return SCREEN_WIDTH, SCREEN_HEIGHT
+
 
 # Set colors
 def define_colors():
