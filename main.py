@@ -62,8 +62,10 @@ class Quit_Button:
         return False
 
 
+#play_button = Play_Button("Exit", (100, 100), (200, 50))
+#Settings_button = Settings_Button("Exit", (100, 100), (200, 50))
+#Unknown_button = Unknown_Button("Exit", (100, 100), (200, 50))
 quit_button = Quit_Button("Exit", (100, 100), (200, 50))
-
 
 # Main function
 def main():
@@ -78,7 +80,11 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            #play_button.handle_event(event)
+            #settings_button.handle_event(event)
+            #Credits_button.handle_event(event)
             quit_button.handle_event(event)
+
 
 
         # Clear the screen
