@@ -16,6 +16,7 @@ GRAY = (200, 200, 200)
 # Set font
 font = pygame.font.SysFont(None, 36)
 
+
 # Function to draw text on screen
 def draw_text(surface, text, color, x, y):
     text_surface = font.render(text, True, color)
@@ -24,11 +25,41 @@ def draw_text(surface, text, color, x, y):
     surface.blit(text_surface, text_rect)
 
 # Function to create buttons
-def draw_button(surface, text, x, y, width, height):
-    pygame.draw.rect(surface, GRAY, (x, y, width, height))
-    pygame.draw.rect(surface, BLACK, (x, y, width, height), 2)
-    draw_text(surface, text, BLACK, x + 10, y + 10)
+class Button:
+    def __init__(self, text, position, size, color=(0, 255, 0), hover_color=(0, 200, 0), font_size=30):
+        self.text = text
+        self.position = position
+        self.size = size
+        self.color = color
+        self.hover_color = hover_color
+        self.font = pygame.font.Font(None, font_size)
+        self.rect = pygame.Rect(position, size)
+        self.clicked = False
 
+    def draw(self, screen):
+        pygame.draw.rect(screen, self.hover_color if self.hovered() else self.color, self.rect)
+        text_surface = self.font.render(self.text, True, (255, 255, 255))
+        text_rect = text_surface.get_rect(center=self.rect.center)
+        screen.blit(text_surface, text_rect)
+
+    def move(self, dx, dy):
+        self.rect.move_ip(dx, dy)
+
+    def hovered(self):
+        return self.rect.collidepoint(pygame.mouse.get_pos())
+
+    def handle_event(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if self.hovered():
+                self.clicked = True
+        elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+            if self.clicked and self.hovered():
+                self.clicked = False
+                return True
+            self.clicked = False
+        return False
+
+button = Button("Click Me", (100, 100), (200, 50))
 # Main function
 def main():
     # Set up the screen
@@ -47,10 +78,10 @@ def main():
         screen.fill(WHITE)
 
         # Draw buttons
-        draw_button(screen, "Start", 100, 100, 200, 50)
-        draw_button(screen, "Options", 100, 200, 200, 50)
-        draw_button(screen, "Quit", 100, 300, 200, 50)
-
+        #draw_button(screen, "Start", 100, 100, 200, 50)
+        #draw_button(screen, "Options", 100, 200, 200, 50)
+        #draw_button(screen, "Quit", 100, 300, 200, 50)
+        button.draw(screen)
         # Version indicator
         draw_text(screen, "Version 1.0", BLACK, 10, SCREEN_HEIGHT - 40)
 
