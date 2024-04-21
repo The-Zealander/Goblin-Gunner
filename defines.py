@@ -1,10 +1,14 @@
-import pygame
 import sys
-import subprocess
+import pygame
 
 # define resolusion
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
+
+
+def resolusion():
+    return SCREEN_WIDTH, SCREEN_HEIGHT
+
 
 def version_keys():
     program_state = "Aplha"
@@ -14,10 +18,6 @@ def version_keys():
     Gameplay_Version = "0.0"
     Title_Version = "0.1"
     return program_state, program_version, Menu_Version, Settings_Version, Gameplay_Version, Title_Version
-
-
-def resolusion():
-    return SCREEN_WIDTH, SCREEN_HEIGHT
 
 
 # Set colors
@@ -41,13 +41,3 @@ def define_colors():
         "AQUA": (0, 255, 255)
     }
     return colors
-
-def main():
-    try:
-        result = subprocess.run(["python", "titlescreen.py"], check=True, capture_output=True, text=True)
-        print(result.stdout)
-    except subprocess.CalledProcessError as e:
-        print(f"Error launching titlescreen.py: {e}")
-
-if __name__ == "__main__":
-    main()

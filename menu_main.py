@@ -1,6 +1,6 @@
 import pygame
 import sys
-from main import resolusion, version_keys
+from defines import resolusion, version_keys
 
 # Initialize pygame
 pygame.init()
@@ -9,20 +9,28 @@ pygame.init()
 screen_resolusion = resolusion()
 prgram_state, program_version, Menu_Version, Settings_Version, Gameplay_Version, Title_Version = version_keys()
 
-#button colors
+# button colors
 BUTTON_COLOR_INACTIVE = "NAVY"
 BUTTON_COLOR_ACTIVE = "BLUE"
 
 # define different fonts
 version_font = pygame.font.SysFont(None, 20)
+title_font = pygame.font.SysFont(None, 50)
 
 
 # Other variables or constants
 
 
-# Function to draw text on screen
-def draw_text(surface, text, color, x, y):
+# FunctionS to draw text on screen
+def draw_version_text(surface, text, color, x, y):
     text_surface = version_font.render(text, True, color)
+    text_rect = text_surface.get_rect()
+    text_rect.topleft = (x, y)
+    surface.blit(text_surface, text_rect)
+
+
+def draw_title_text(surface, text, color, x, y):
+    text_surface = title_font.render(text, True, color)
     text_rect = text_surface.get_rect()
     text_rect.topleft = (x, y)
     surface.blit(text_surface, text_rect)
@@ -208,6 +216,9 @@ def main():
         # Clear the screen
         screen.fill("WHITE")
 
+        #draw title
+        draw_version_text(screen, f"G O B L I N   G U N N E R", "BLACK", screen_resolusion[0]-710, screen_resolusion[1] - 550)
+
         # Draw buttons
         play_button.draw(screen)
         settings_button.draw(screen)
@@ -215,9 +226,12 @@ def main():
         quit_button.draw(screen)
 
         # Version indicators
-        draw_text(screen, f"Game Version: {prgram_state} {Gameplay_Version}", "BLACK", 10, screen_resolusion[1] - 75)
-        draw_text(screen, f"Settings Version: {prgram_state} {Settings_Version}", "BLACK", 10, screen_resolusion[1] - 50)
-        draw_text(screen, f"Menu Version: {prgram_state} {Menu_Version}", "BLACK", 10, screen_resolusion[1] - 25)
+        draw_version_text(screen, f"Game Version: {prgram_state} {Gameplay_Version}", "BLACK", 10,
+                          screen_resolusion[1] - 75)
+        draw_version_text(screen, f"Settings Version: {prgram_state} {Settings_Version}", "BLACK", 10,
+                          screen_resolusion[1] - 50)
+        draw_version_text(screen, f"Menu Version: {prgram_state} {Menu_Version}", "BLACK", 10,
+                          screen_resolusion[1] - 25)
         # Update the display
         pygame.display.flip()
 
