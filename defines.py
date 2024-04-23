@@ -1,43 +1,57 @@
-import sys
 import pygame
 
 # Initialize Pygame
 pygame.init()
 
-# define resolution
-SCREEN_WIDTH = 1280
-SCREEN_HEIGHT = 720
+# Define resolutions
+RESOLUTIONS = {
+    "HD": {"width": 1280, "height": 720},
+    "FHD": {"width": 1920, "height": 1080},
+    "UHD": {"width": 2560, "height": 1440},  # 2K Resolution
+}
 
-# Define the fonts to be used
-title_font = pygame.font.SysFont("Arial", 90)  # Font for title
-general_font = pygame.font.SysFont("Arial", 50)  # General font
-small_font = pygame.font.SysFont("Arial", 25)  # Small font
-version_font = pygame.font.SysFont("Arial", 12)  # Font for version info
+# Default resolution (can be changed based on user preference)
+DEFAULT_RESOLUTION = RESOLUTIONS["HD"]  # Set to 1280x720 by default
 
-# other shit
-game_name = "Goblin Gunner"
+# Define fonts
+TITLE_FONT = pygame.font.SysFont("Arial", 90)  # Font for titles
+GENERAL_FONT = pygame.font.SysFont("Arial", 50)  # General font
+SMALL_FONT = pygame.font.SysFont("Arial", 25)  # Smaller font
+VERSION_FONT = pygame.font.SysFont("Arial", 12)  # Font for version info
 
-# SOunds
-BUTTON_CLICK_SOUND = "Button_sound.mp3"  # Make sure this file exists in your project directory
+# Game name
+GAME_NAME = "Goblin Gunner"
+
+# Sounds
+BUTTON_CLICK_SOUND = "Button_sound.mp3"  # Path to button click sound file
 
 
-def resolution():
-    return SCREEN_WIDTH, SCREEN_HEIGHT
+# Function to get the current resolution
+def get_current_resolution():
+    return DEFAULT_RESOLUTION["width"], DEFAULT_RESOLUTION["height"]
 
 
-def version_keys():
-    program_state = "Aplha"
+# Define program version and state
+def get_version_info():
+    program_state = "Alpha"
     program_version = "0.3"
-    Menu_Version = "0.2"
-    Settings_Version = "0.0"
-    Gameplay_Version = "0.0"
-    Title_Version = "0.5"
-    return program_state, program_version, Menu_Version, Settings_Version, Gameplay_Version, Title_Version
+    menu_version = "0.2"
+    settings_version = "0.0"
+    gameplay_version = "0.0"
+    title_version = "0.5"
+    return {
+        "program_state": program_state,
+        "program_version": program_version,
+        "menu_version": menu_version,
+        "settings_version": settings_version,
+        "gameplay_version": gameplay_version,
+        "title_version": title_version,
+    }
 
 
-# Set colors
-def define_colors():
-    colors = {
+# Define common colors
+def get_colors():
+    return {
         "BLACK": (0, 0, 0),
         "SILVER": (192, 192, 192),
         "GRAY": (128, 128, 128),
@@ -53,6 +67,5 @@ def define_colors():
         "PURPLE": (128, 0, 128),
         "FUCHSIA": (255, 0, 255),
         "TEAL": (0, 128, 128),
-        "AQUA": (0, 255, 255)
+        "AQUA": (0, 255, 255),
     }
-    return colors

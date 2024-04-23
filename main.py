@@ -4,11 +4,12 @@ from titlescreen import TitleScreen
 from start_menu import MainMenu
 from gametest import The_Game
 
+
 class Game:
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((defines.SCREEN_WIDTH,defines.SCREEN_HEIGHT))
-        pygame.display.set_caption(defines.game_name)
+        self.screen = pygame.display.set_mode((defines.get_current_resolution()))
+        pygame.display.set_caption(defines.GAME_NAME)
         try:
             icon = pygame.image.load("8bitsword.png")
             pygame.display.set_icon(icon)
