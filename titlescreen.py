@@ -1,91 +1,84 @@
 import pygame
-import sys
-import time
-import glob
-import subprocess
-from defines import resolusion, version_keys
+import defines
 
-# Initialize Pygame
-pygame.init()
 
-# Call functions to get screen resolution and version info
-screen_resolusion = resolusion()
-program_state, program_version, Menu_Version, Settings_Version, Gameplay_Version, Title_Version = version_keys()
+class TitleScreen:
+    def __init__(self):
+        # Load an image for the title screen
+        self.image = pygame.image.load("Goblincampimagepixels.png")
+        self.image_rect = self.image.get_rect(center=(defines.SCREEN_WIDTH / 2, defines.SCREEN_HEIGHT / 2))
 
-# Define fonts
-version_font = pygame.font.SysFont(None, 20)
-title_font = pygame.font.SysFont(None, 100)  # Changed font size for title
+        # Title text setup
+        self.font_title = defines.title_font
+        self.title_text = self.font_title.render("GOBLIN                     GUNNER", True, "GREEN")
+        self.title_text_rect = self.title_text.get_rect(center=(defines.SCREEN_WIDTH / 2, defines.SCREEN_HEIGHT / 2))
+        self.title_text_rect.y -= 110  # Adjust this value to move the text upward or downward
 
-# Function to draw text on screen
-def draw_text(surface, text, font, color, x, y):
-    text_surface = font.render(text, True, color)
-    text_rect = text_surface.get_rect()
-    text_rect.topleft = (x, y)
-    surface.blit(text_surface, text_rect)
+        # Instruction text setup
+        self.font_instructions = defines.small_font
+        self.instruction_text = self.font_instructions.render("Press Enter to start", True, "WHITE")
+        self.instruction_text_rect = self.instruction_text.get_rect(
+            center=(defines.SCREEN_WIDTH / 2, defines.SCREEN_HEIGHT / 2))
+        self.instruction_text_rect.y += 300  # Adjust this value to move the text upward or downward
 
-# Main function
-def main():
-    # Set up the screen
-    screen = pygame.display.set_mode((screen_resolusion[0], screen_resolusion[1]))
-    pygame.display.set_caption("TITLESCREEN")
-    icon = pygame.image.load("8bitsword.png")
-    pygame.display.set_icon(icon)
+        # Retrieve version information from defines.version_keys()
+        program_state, program_version, menu_version, settings_version, gameplay_version, title_version = defines.version_keys()
 
-    # Frame rate control
-    clock = pygame.time.Clock()
+        # List of version information
+        version_lines = [
+            f"Program Version: {program_state} {program_version}",
+            f"Menu Version: {program_state} {menu_version}",
+            f"Settings Version: {program_state} {settings_version}",
+            f"Gameplay Version: {program_state} {gameplay_version}",
+            f"Title Version: {program_state} {title_version}"
+        ]
 
-    # Load GIF frames
-    frame_paths = sorted(glob.glob("C:\Users\Zakarias\PycharmProjects\pphehe\Titlescreen image folder"))  # Adjust the path to your frames folder
-    frames = [pygame.image.load(frame_path) for frame_path in frame_paths]
+        # Create a list to hold the rendered text surfaces and their rects
+        self.version_texts = []
 
-    # Animation settings
-    frame_index = 0
-    frame_duration = 0.1  # Time in seconds for each frame
-    last_frame_time = time.time()
+        # Initial position for the first line (bottom-left corner with some margin)
+        start_x = 10
+        start_y = defines.SCREEN_HEIGHT - 10
 
-    # Main loop
-    running = True
-    while running:
-        for event in pygame.event.get():
+        # Font for the version information
+        self.font_version = defines.version_font
+
+        # Create each text surface and position it correctly
+        for line in version_lines:
+            # Render the line as a text surface
+            text_surface = self.font_version.render(line, True, "WHITE")
+            text_rect = text_surface.get_rect()
+            text_rect.bottomleft = (start_x, start_y)
+
+            # Add to the list of version texts
+            self.version_texts.append((text_surface, text_rect))
+
+            # Adjust the `y` coordinate for the next line, leaving some space between them
+            start_y -= text_rect.height + 5  # Adjust this offset for desired spacing
+
+    def handle_events(self, events):
+        # Handle events like quitting or switching scenes
+        for event in events:
             if event.type == pygame.QUIT:
-                running = False
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-                # Handle Enter key press
-                try:
-                    result = subprocess.run(["python", "menu_main.py"], check=True, capture_output=True, text=True)
-                    print(result.stdout)
-                    pygame.quit()
-                    sys.exit()
-                except subprocess.CalledProcessError as e:
-                    print(f"Error launching menu_main.py: {e}")
+                return "quit"
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:  # Press Enter to go to the main menu
+                    return "main_menu"
+        return None
 
-        # Clear the screen
+    def update(self):
+        # No specific updates needed here, but you can add logic if required
+        pass
+
+    def render(self, screen):
+        # Fill the screen with black to avoid artifacts
         screen.fill("BLACK")
 
-        # Draw the title and version info
-        draw_text(screen, "G O B L I N   G U N N E R", title_font, "WHITE", screen_resolusion[0] - 710, screen_resolusion[1] - 550)
-        draw_text(screen, f"Game Version: {program_state} {Title_Version}", version_font, "WHITE", 15, screen_resolusion[1] - 50)
+        # Draw the background image
+        screen.blit(self.image, self.image_rect)
 
-        # Get the current time
-        current_time = time.time()
-
-        # Update frame if enough time has passed
-        if current_time - last_frame_time > frame_duration:
-            frame_index = (frame_index + 1) % len(frames)
-            last_frame_time = current_time
-
-        # Draw the current frame
-        screen.blit(frames[frame_index], (0, 0))
-
-        # Update the display
-        pygame.display.flip()
-
-        # Control frame rate
-        clock.tick(30)  # Limit to 30 FPS
-
-    # Quit pygame
-    pygame.quit()
-    sys.exit()
-
-if __name__ == "__main__":
-    main()
+        # Draw the title and instruction text with correct alignment
+        screen.blit(self.title_text, self.title_text_rect)  # Title text (adjusted upward)
+        screen.blit(self.instruction_text, self.instruction_text_rect)  # Instruction text (adjusted downward)
+        for text_surface, text_rect in self.version_texts:
+            screen.blit(text_surface, text_rect)
