@@ -56,12 +56,12 @@ class MainMenu:
     def handle_events(self, events):
         # Handle events for each button
         for event in events:
-            if event.type == pygame.QUIT:
-                return "quit"
             if self.play_button.handle_event(event):
                 return "start_game"
             if self.settings_button.handle_event(event):
                 return "open_settings"
+            if event.type == pygame.QUIT:
+                return "quit"
             if self.quit_button.handle_event(event):
                 sys.exit()
         return None

@@ -2,6 +2,7 @@ import pygame
 import defines
 from titlescreen import TitleScreen
 from start_menu import MainMenu
+from gametest import The_Game
 
 class Game:
     def __init__(self):
@@ -26,6 +27,8 @@ class Game:
                 self.running = False
             elif next_scene == "main_menu":
                 self.current_scene = MainMenu()  # Transition to the main menu
+            elif next_scene == "start_game":
+                self.current_scene = The_Game()
 
             # Update and render the current scene
             self.current_scene.update()
