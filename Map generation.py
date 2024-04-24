@@ -1,14 +1,13 @@
 import numpy as np
 import pygame
 import time
-
 import defines
 
 # Set colors
-WALL_COLOR = (50, 50, 50)
-GRID_COLOR = (0, 0, 0)
-FLOOR_COLOR = (255, 255, 255)
-FLOOR_NEXT_COL = (0, 0, 255)
+WALL_COLOR = "BLUE"
+GRID_COLOR = "BLACK"
+FLOOR_COLOR = "GREEN"
+FLOOR_NEXT_COL = "WHITE"
 
 
 def update(screen, cells, size, with_progress=False):
@@ -47,10 +46,10 @@ def main():
     # Set size of cells
     size = 10
     # Set size of screen
-    WIDTH = defines.SCREEN_WIDTH
-    HEIGHT = defines.SCREEN_HEIGHT
+    WIDTH = 1920
+    HEIGHT = 1080
     # Set dimension of cells and their initial configuration
-    cells = np.random.choice(2, size=(720,1280)=[0.38, 0.62])
+    cells = np.random.choice([0, 1], size=(72, 128), p=[0.38, 0.62])
     cells[0:60, 0] = 1
     cells[0, 0:80] = 1
     cells[0:60, 79] = 1
@@ -76,6 +75,7 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
+                return
             # If space key is pressed, change running in true/false
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
@@ -86,7 +86,7 @@ def main():
         if running:
             cells = update(screen, cells, size, with_progress=True)
             pygame.display.update()
-        time.sleep(2)
+        #time.sleep(2)
 
 
 if __name__ == '__main__':
