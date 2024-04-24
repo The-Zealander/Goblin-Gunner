@@ -6,7 +6,7 @@ class TitleScreen:
     def __init__(self):
         # Load an image for the title screen
         try:
-            self.image = pygame.image.load("Goblincampimagepixels.png")
+            self.image = pygame.image.load("images/Goblincampimagepixels.png")
         except FileNotFoundError:
             print("Title screen image not found. Defaulting to black screen.")
             self.image = pygame.Surface((defines.DEFAULT_RESOLUTION["width"], defines.DEFAULT_RESOLUTION["height"]))
@@ -54,12 +54,13 @@ class TitleScreen:
             start_y -= text_rect.height + 5  # Adjust spacing
 
     def handle_events(self, events):
+        # Handle events like quitting or switching scenes
         for event in events:
             if event.type == pygame.QUIT:
                 return "quit"
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:  # Press Enter to start
-                    return "main_menu"
+                if event.key == pygame.K_RETURN:
+                    return "main_menu"  # Transition to main menu
         return None
 
     def update(self):

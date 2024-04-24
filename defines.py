@@ -26,6 +26,25 @@ GAME_NAME = "Goblin Gunner"
 BUTTON_CLICK_SOUND = "Button_sound.mp3"  # Path to button click sound file
 
 
+# tile shit
+TILE_SIZE = 32  # The size of each tile in pixels
+
+# Define the grid layout
+GRID_WIDTH = 36  # Number of tiles horizontally
+GRID_HEIGHT = 20  # Number of tiles vertically
+
+# Define screen resolution based on grid size and tile size
+SCREEN_WIDTH = GRID_WIDTH * TILE_SIZE  # 36 tiles across
+SCREEN_HEIGHT = GRID_HEIGHT * TILE_SIZE  # 20 tiles up and down
+
+# Define information panel size
+INFO_PANEL_TILES = 3  # Info panel width in tiles
+INFO_PANEL_WIDTH = INFO_PANEL_TILES * TILE_SIZE
+
+# Final screen size with the info panel included
+TOTAL_SCREEN_WIDTH = SCREEN_WIDTH + INFO_PANEL_WIDTH  # Include the info panel in screen width
+
+
 # Function to get the current resolution
 def get_current_resolution():
     return DEFAULT_RESOLUTION["width"], DEFAULT_RESOLUTION["height"]

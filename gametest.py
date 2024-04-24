@@ -18,22 +18,23 @@ class The_Game:
         self.gameplay_width = screen_width - self.info_panel_width
 
         # Load the image for the grass tile
-        self.grass_tile = pygame.image.load("grass_tile'.png")  # Load the image file
+        self.grass_tile = pygame.image.load("images/grass_tile.png")  # Load the image file
         # Optionally scale the image to match the tile size
         self.grass_tile = pygame.transform.scale(self.grass_tile, (self.tile_size, self.tile_size))
 
-        # Initialize tile surfaces and grid
-        self.water_tile = pygame.Surface((self.tile_size, self.tile_size))
-        self.water_tile.fill("BLUE")
+        # Load the image for the grass tile
+        self.water_tile = pygame.image.load("images/water_tile.png")  # Load the image file
+        # Optionally scale the image to match the tile size
+        self.water_tile = pygame.transform.scale(self.water_tile, (self.tile_size, self.tile_size))
 
         # Load the image for the stone tile
-        self.stone_tile = pygame.image.load("stone.png")  # Load the image file
+        self.stone_tile = pygame.image.load("images/stone_tile.png")  # Load the image file
         # Optionally scale the image to match the tile size
         self.stone_tile = pygame.transform.scale(self.stone_tile, (self.tile_size, self.tile_size))
 
 
         # Load the image for the longgrass tile
-        self.longgrass_tile = pygame.image.load("longgrass.png")  # Load the image file
+        self.longgrass_tile = pygame.image.load("images/long_grass_tile.png")  # Load the image file
         # Optionally scale the image to match the tile size
         self.longgrass_tile = pygame.transform.scale(self.longgrass_tile, (self.tile_size, self.tile_size))
 
@@ -48,8 +49,10 @@ class The_Game:
         # self.water_tile = pygame.Surface((self.tile_size, self.tile_size))
         # self.water_tile.fill("NAVY")
 
-        self.player_tile = pygame.Surface((self.tile_size, self.tile_size))
-        self.player_tile.fill("RED")
+        # Load the image for the grass tile
+        self.player_token = pygame.image.load("images/player_placeholder.png")  # Load the image file
+        # Optionally scale the image to match the tile size
+        self.player_token = pygame.transform.scale(self.player_token, (self.tile_size, self.tile_size))
 
         # Initialize grid with random elements
         self.grid = [[random.choice([0, 1, 2, 3]) for _ in range(self.grid_width)] for _ in range(self.grid_height)]
@@ -107,7 +110,7 @@ class The_Game:
                 screen.blit(tile, (col * self.tile_size, row * self.tile_size))
 
                 # Draw the player
-                screen.blit(self.player_tile,
+                screen.blit(self.player_token,
                             (self.player_pos[0] * self.tile_size, self.player_pos[1] * self.tile_size))
 
         # Display controls and other information in the info panel
