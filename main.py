@@ -42,9 +42,6 @@ class Game:
             # Change scene based on the returned value
             self.change_scene(next_scene)
 
-            # Calculate delta time
-            dt = self.clock.tick(60) / 1000.0  # 60 FPS, delta time in seconds
-
             # Update and render the current scene
             self.current_scene.update()  # Pass delta time to the scene
             self.current_scene.render(self.screen)  # Render the scene
