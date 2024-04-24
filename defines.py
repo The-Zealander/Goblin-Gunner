@@ -5,8 +5,8 @@ pygame.init()
 
 # Define resolutions
 RESOLUTIONS = {
-    "HD": {"width": 1280, "height": 720},
-    "FHD": {"width": 1920, "height": 1080},
+    "HD": {"width": 1280, "height": 720},  # 720p
+    "FHD": {"width": 1920, "height": 1080},  # 1080p
     "UHD": {"width": 2560, "height": 1440},  # 2K Resolution
 }
 
