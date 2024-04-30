@@ -1,57 +1,47 @@
 import pygame
+import sys
 import defines
-from titlescreen import TitleScreen
-from start_menu import MainMenu
-from gametest import The_Game
+from player import Player
 
+pygame.init()
+screen = pygame.display.set_mode((defines.resolution))
+clock = pygame.time.Clock()
 
-class Game:
-    def __init__(self):
-        pygame.init()
+# Create the player
+player = Player(10, 10, defines.p_speed)
 
-        # Setup the display with the current resolution
-        self.screen = pygame.display.set_mode(defines.get_current_resolution())
-        pygame.display.set_caption(defines.GAME_NAME)
+running = True
+while running:
+    dt = clock.get_time() / 10000  # Delta time in seconds
 
-        # Try to set an icon for the game window
-        try:
-            icon = pygame.image.load("images/8bitsword.png").convert_alpha()
-            pygame.display.set_icon(icon)
-        except FileNotFoundError:
-            print("Icon file not found. Skipping.")
+    # Handle events like quitting and player movement
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
 
-        self.current_scene = TitleScreen()  # Start with the title screen
-        self.running = True
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_w:
+                player.move(0, -1)  # Move up
+            elif event.key == pygame.K_s:
+                player.move(0, 1)  # Move down
+            elif event.key == pygame.K_a:
+                player.move(-1, 0)  # Move left
+            elif event.key == pygame.K_d:
+                player.move(1, 0)  # Move right
 
-        # Frame rate control
-        self.clock = pygame.time.Clock()  # Clock to track delta time
+        if event.type == pygame.KEYUP:
+            if event.key in [pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d]:
+                player.move(0, 0)  # Stop moving when key is released
 
-    def change_scene(self, scene_name):
-        if scene_name == "quit":
-            self.running = False
-        elif scene_name == "main_menu":
-            self.current_scene = MainMenu()  # Transition to the main menu
-        elif scene_name == "start_game":
-            self.current_scene = The_Game()  # Start the game
+    # Update the player position with boundary checks
+    player.update(dt)
 
-    def run(self):
-        while self.running:
-            events = pygame.event.get()  # Get all events
-            next_scene = self.current_scene.handle_events(events)  # Handle scene events
+    # Clear the screen and render the player
+    screen.fill("BLACK")  # Black background
+    player.draw(screen, 100)
 
-            # Change scene based on the returned value
-            self.change_scene(next_scene)
+    pygame.display.flip()  # Update the display
+    clock.tick(defines.FPS)  # Maintain consistent frame rate
 
-            # Update and render the current scene
-            self.current_scene.update()  # Pass delta time to the scene
-            self.current_scene.render(self.screen)  # Render the scene
-
-            # Update the display
-            pygame.display.flip()
-
-        pygame.quit()  # Cleanup when exiting the loop
-
-
-if __name__ == "__main__":
-    game = Game()  # Create and initialize the game
-    game.run()  # Start the game loop
+pygame.quit()
+sys.exit()

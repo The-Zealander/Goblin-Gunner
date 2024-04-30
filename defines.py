@@ -5,6 +5,7 @@ pygame.init()
 
 # Define resolution
 resolution = (1920, 1080)
+FPS = 60
 
 # Define fonts
 TITLE_FONT = pygame.font.SysFont("Arial", 90)  # Font for titles
@@ -57,3 +58,9 @@ def get_colors():
         "TEAL": (0, 128, 128),
         "AQUA": (0, 255, 255),
     }
+
+
+detec_rad = 10
+e_speed = 5
+p_speed = 6
+b_speed = 1

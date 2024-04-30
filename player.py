@@ -1,28 +1,36 @@
 import pygame
 import defines
 
-class Player(pygame.sprite.Sprite):
-    def __init__(self):
-        super().__init__()
+class Player:
+    def __init__(self, x, y):
+        self.pos = pygame.Vector2(x, y)
+        self.speed = defines.p_speed
+        self.direction = pygame.Vector2(0, 0)
 
-        # Load the player image
-        self.image = pygame.image.load("player_sprite.png").convert_alpha()  # Convert for performance
-        self.rect = self.image.get_rect()
+    def update(self, dt):
+        # Calculate new position
+        new_pos = self.pos + self.direction * self.speed * dt
 
-        # Set initial position
-        self.rect.topleft = (0, 0)  # Top-left corner
-        self.speed = 150  # Pixels per second (adjust as needed)
+        # Ensure the player doesn't move outside the screen
+        # Check horizontal bounds
+        if new_pos.x < 0:
+            new_pos.x = 0
+        elif new_pos.x > SCREEN_WIDTH / TILE_SIZE - 1:
+            new_pos.x = SCREEN_WIDTH / TILE_SIZE - 1
 
-    def update(self, dt, keys):
-        # Update the position based on key presses and delta time
-        if keys[pygame.K_UP]:
-            self.rect.y -= self.speed * dt
-        if keys[pygame.K_DOWN]:
-            self.rect.y += self.speed * dt
-        if keys[pygame.K_LEFT]:
-            self.rect.x -= self.speed * dt
-        if keys[pygame.K_RIGHT]:
-            self.rect.x += self.speed * dt
+        # Check vertical bounds
+        if new_pos.y < 0:
+            new_pos.y = 0
+        elif new_pos.y > SCREEN_HEIGHT / TILE_SIZE - 1:
+            new_pos.y = SCREEN_HEIGHT / TILE_SIZE - 1
 
-        # Ensure the player doesn't go out of bounds
-        self.rect.clamp_ip((0, 0, defines.SCREEN_WIDTH, defines.SCREEN_HEIGHT))
+        self.pos = new_pos
+
+    def draw(self, screen):
+        pygame.draw.rect(
+            screen, (0, 255, 0),
+            (self.pos.x * TILE_SIZE, self.pos.y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+        )
+
+    def move(self, dx, dy):
+        self.direction = pygame.Vector2(dx, dy)
