@@ -16,24 +16,27 @@ class Enemy:
         self.direction.y = random.choice([-1, 0, 1])
 
     def update(self, dt, player_pos):
-        # Update position based on direction
+        # Move based on direction
         self.pos += self.direction * self.speed * dt
 
-        # Randomly change direction after some time
-        if random.random() < 0.02:  # 2% chance to change direction per frame
+        # Randomly change direction
+        if random.random() < 0.02:
             self.change_direction()
 
-        # If the player is within the detection radius, move toward them
+        # Move toward the player if within detection radius
         distance = calc.calculate_distance(self.pos, player_pos)
         if distance < defines.detec_rad:
             direction_to_player = pygame.Vector2(player_pos) - self.pos
-            direction_to_player.normalize_ip()  # Normalized direction
+            direction_to_player.normalize_ip()
             self.direction = direction_to_player
 
-    def draw(self, screen, tile_size):
-        # Draw the enemy as a red square
-        rect = pygame.Rect(
-            self.pos.x * tile_size, self.pos.y * tile_size,
-            tile_size, tile_size
+    def draw(self, screen):
+        pygame.draw.rect(
+            screen, (255, 0, 0),
+            pygame.Rect(
+                self.pos.x * defines.map_tile_size,
+                self.pos.y * defines.map_tile_size,
+                defines.map_tile_size,
+                defines.map_tile_size
+            )
         )
-        pygame.draw.rect(screen, ("RED"), rect)

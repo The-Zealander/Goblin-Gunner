@@ -61,6 +61,9 @@ def get_colors():
 
 
 detec_rad = 10
-e_speed = 5
-p_speed = 6
-b_speed = 1
+e_speed = 1
+p_speed = 5
+b_speed = 10
+map_width = 1920
+map_height = 1080
+map_tile_size = 60

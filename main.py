@@ -2,23 +2,35 @@ import pygame
 import sys
 import defines
 from player import Player
+from enemy import Enemy
+from map import Map
+from camera import Camera
 
+# Initialize Pygame and create a game window
 pygame.init()
-screen = pygame.display.set_mode((defines.resolution))
+screen = pygame.display.set_mode(defines.resolution)
+pygame.display.set_caption("Goblin Gunner")
+
+# Create a clock to control the frame rate
 clock = pygame.time.Clock()
 
-# Create the player
-player = Player(10, 10, defines.p_speed)
+# Create game objects
+game_map = Map()
+camera = Camera(*defines.resolution)
+player = Player(10, 10)  # Starting position for the player
+enemy = Enemy(15, 15)  # Starting position for the enemy
 
+# Game loop
 running = True
 while running:
-    dt = clock.get_time() / 10000  # Delta time in seconds
+    dt = clock.get_time() / 1000  # Delta time in seconds
 
-    # Handle events like quitting and player movement
+    # Event handling
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
+        # Keyboard controls for the player
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_w:
                 player.move(0, -1)  # Move up
@@ -31,17 +43,32 @@ while running:
 
         if event.type == pygame.KEYUP:
             if event.key in [pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d]:
-                player.move(0, 0)  # Stop moving when key is released
+                player.move(0, 0)  # Stop moving
 
-    # Update the player position with boundary checks
+    # Update player position with boundary checks
     player.update(dt)
 
-    # Clear the screen and render the player
-    screen.fill("BLACK")  # Black background
-    player.draw(screen, 100)
+    # Update enemy with player position for tracking
+    enemy.update(dt, player.pos)
 
-    pygame.display.flip()  # Update the display
-    clock.tick(defines.FPS)  # Maintain consistent frame rate
+    # Update the camera to follow the player
+    camera.update((player.pos.x * defines.map_tile_size, player.pos.y * defines.map_tile_size))
 
+    # Clear the screen with a color
+    colors = defines.get_colors()
+    screen.fill(colors["BLACK"])  # Black background
+
+    # Render the map, player, and enemy with the camera adjustment
+    game_map.draw(screen, camera)
+    player.draw(screen)
+    enemy.draw(screen)
+
+    # Update the display
+    pygame.display.flip()
+
+    # Maintain a steady frame rate
+    clock.tick(defines.FPS)
+
+# Exit Pygame
 pygame.quit()
 sys.exit()

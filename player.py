@@ -8,28 +8,30 @@ class Player:
         self.direction = pygame.Vector2(0, 0)
 
     def update(self, dt):
-        # Calculate new position
         new_pos = self.pos + self.direction * self.speed * dt
 
-        # Ensure the player doesn't move outside the screen
-        # Check horizontal bounds
+        # Ensure the player stays within map boundaries
         if new_pos.x < 0:
             new_pos.x = 0
-        elif new_pos.x > SCREEN_WIDTH / TILE_SIZE - 1:
-            new_pos.x = SCREEN_WIDTH / TILE_SIZE - 1
+        elif new_pos.x > defines.resolution[0] / defines.map_tile_size - 1:
+            new_pos.x = defines.resolution[0] / defines.map_tile_size - 1
 
-        # Check vertical bounds
         if new_pos.y < 0:
             new_pos.y = 0
-        elif new_pos.y > SCREEN_HEIGHT / TILE_SIZE - 1:
-            new_pos.y = SCREEN_HEIGHT / TILE_SIZE - 1
+        elif new_pos.y > defines.resolution[1] / defines.map_tile_size - 1:
+            new_pos.y = defines.resolution[1] / defines.map_tile_size - 1
 
         self.pos = new_pos
 
     def draw(self, screen):
         pygame.draw.rect(
-            screen, (0, 255, 0),
-            (self.pos.x * TILE_SIZE, self.pos.y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+            screen, "GREEN",
+            pygame.Rect(
+                self.pos.x * defines.map_tile_size,
+                self.pos.y * defines.map_tile_size,
+                defines.map_tile_size,
+                defines.map_tile_size
+            )
         )
 
     def move(self, dx, dy):
