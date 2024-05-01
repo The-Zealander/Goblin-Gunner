@@ -1,74 +1,89 @@
+from itertools import cycle
+
 import pygame
-import sys
-import defines
 from player import Player
-from enemy import Enemy
-from map import Map
 from camera import Camera
+from map import GameMap, TileType
 
-# Initialize Pygame and create a game window
-pygame.init()
-screen = pygame.display.set_mode(defines.resolution)
-pygame.display.set_caption("Goblin Gunner")
+# Constants
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
+TILE_SIZE = 32
 
-# Create a clock to control the frame rate
-clock = pygame.time.Clock()
+# Colors for different tile types
+TILE_COLORS = {
+    TileType.GROUND: (100, 100, 100),  # Gray
+    TileType.WATER: (0, 0, 255),  # Blue
+    TileType.TREE: (0, 128, 0),  # Green
+    TileType.WALL: (255, 0, 0),  # Red
+}
 
-# Create game objects
-game_map = Map()
-camera = Camera(*defines.resolution)
-player = Player(10, 10)  # Starting position for the player
-enemy = Enemy(15, 15)  # Starting position for the enemy
 
-# Game loop
-running = True
-while running:
-    dt = clock.get_time() / 1000  # Delta time in seconds
+def game_loop():
+    pygame.init()
 
-    # Event handling
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    pygame.display.set_caption("Camera Centered on Player")
 
-        # Keyboard controls for the player
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_w:
-                player.move(0, -1)  # Move up
-            elif event.key == pygame.K_s:
-                player.move(0, 1)  # Move down
-            elif event.key == pygame.K_a:
-                player.move(-1, 0)  # Move left
-            elif event.key == pygame.K_d:
-                player.move(1, 0)  # Move right
+    # Create a large map with some features
+    map_width = 50  # In tiles
+    map_height = 50  # In tiles
+    game_map = GameMap(map_width, map_height, TILE_SIZE)
+    game_map.add_forests(5, 5)  # Add some forests
+    game_map.add_water_bodies(3, 4)  # Add some water bodies
 
-        if event.type == pygame.KEYUP:
-            if event.key in [pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d]:
-                player.move(0, 0)  # Stop moving
+    # Create a player and a camera
+    player = Player(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+    camera = Camera(SCREEN_WIDTH, SCREEN_HEIGHT)
 
-    # Update player position with boundary checks
-    player.update(dt)
+    clock = pygame.time.Clock()  # Control frame rate
+    running = True
 
-    # Update enemy with player position for tracking
-    enemy.update(dt, player.pos)
+    while running:
+        dt = clock.tick(60) / 1000.0  # Delta time in seconds
 
-    # Update the camera to follow the player
-    camera.update((player.pos.x * defines.map_tile_size, player.pos.y * defines.map_tile_size))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
 
-    # Clear the screen with a color
-    colors = defines.get_colors()
-    screen.fill(colors["BLACK"])  # Black background
+        # Player movement logic
+        dx, dy = 0, 0
+        keys = pygame.key.get_pressed()
 
-    # Render the map, player, and enemy with the camera adjustment
-    game_map.draw(screen, camera)
-    player.draw(screen)
-    enemy.draw(screen)
+        if keys[pygame.K_LEFT]:
+            dx -= 1
+            player.move("left")
+        if keys[pygame.K_RIGHT]:
+            dx += 1
+            player.move("right")
+        if keys[pygame.K_UP]:
+            dy -= 1
+            player.move("up")
+        if keys[pygame.K_DOWN]:
+            dy += 1
+            player.move("down")
 
-    # Update the display
-    pygame.display.flip()
+        # Update player position and animation
+        player.rect.x += dx * 5  # Adjust movement speed
+        player.rect.y += dy * 5
+        player.current_cycle = cycle(player.animations[player.current_animation])  # Reset cycle if needed
 
-    # Maintain a steady frame rate
-    clock.tick(defines.FPS)
+        # Update the camera to keep it centered on the player
+        camera.update(player)
 
-# Exit Pygame
-pygame.quit()
-sys.exit()
+        # Clear the screen
+        screen.fill((0, 0, 0))  # Black background
+
+        # Draw the map
+        game_map.draw(screen, camera, TILE_COLORS)
+
+        # Draw the player
+        player.draw(screen, camera)
+
+        pygame.display.flip()  # Update the screen with the latest frame
+
+    pygame.quit()
+
+
+if __name__ == "__main__":
+    game_loop()

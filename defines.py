@@ -23,11 +23,11 @@ BUTTON_CLICK_SOUND = "sounds/Button_sound.mp3"  # Path to button click sound fil
 # Define program version and state
 def get_version_info():
     program_state = "Alpha"
-    program_version = "0.3"
+    program_version = "0.35"
     menu_version = "0.2"
     settings_version = "0.0"
-    gameplay_version = "0.0"
-    title_version = "0.5"
+    gameplay_version = "0.1"
+    title_version = "1"
     return {
         "program_state": program_state,
         "program_version": program_version,
@@ -66,4 +66,4 @@ p_speed = 5
 b_speed = 10
 map_width = 1920
 map_height = 1080
-map_tile_size = 60
+map_tile_size = 32

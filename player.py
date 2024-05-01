@@ -1,38 +1,54 @@
 import pygame
-import defines
+from itertools import cycle
+
+
+# Function to load images from a directory
+def load_frames(frame_names):
+    frames = []
+    for name in frame_names:
+        try:
+            image = pygame.image.load(f"Goblin_sprites_walking/{name}").convert_alpha()
+            frames.append(image)
+        except pygame.error as e:
+            print(f"Error loading {name}: {e}")
+            raise  # Optionally re-raise the error to halt execution
+    return frames
+
+
 
 class Player:
     def __init__(self, x, y):
-        self.pos = pygame.Vector2(x, y)
-        self.speed = defines.p_speed
-        self.direction = pygame.Vector2(0, 0)
+        self.rect = pygame.Rect(x, y, 32, 32)  # 32x32 frame size
 
-    def update(self, dt):
-        new_pos = self.pos + self.direction * self.speed * dt
+        # Frame names for each direction
+        down_frames = [f"goblin_walk_down_{i}.png" for i in range(1, 7)]  # down_1.png to down_6.png
+        up_frames = [f"goblin_walk_up_{i}.png" for i in range(1, 7)]  # up_1.png to up_6.png
+        left_frames = [f"goblin_walk_left_{i}.png" for i in range(1, 7)]  # left_1.png to left_6.png
+        right_frames = [f"goblin_walk_right_{i}.png" for i in range(1, 7)]  # right_1.png to right_6.png
 
-        # Ensure the player stays within map boundaries
-        if new_pos.x < 0:
-            new_pos.x = 0
-        elif new_pos.x > defines.resolution[0] / defines.map_tile_size - 1:
-            new_pos.x = defines.resolution[0] / defines.map_tile_size - 1
+        # Load frames for each direction
+        self.animations = {
+            "down": cycle(load_frames(down_frames)),  # Load and cycle frames
+            "up": cycle(load_frames(up_frames)),
+            "left": cycle(load_frames(left_frames)),
+            "right": cycle(load_frames(right_frames)),
+        }
 
-        if new_pos.y < 0:
-            new_pos.y = 0
-        elif new_pos.y > defines.resolution[1] / defines.map_tile_size - 1:
-            new_pos.y = defines.resolution[1] / defines.map_tile_size - 1
+        # Default to walking down
+        self.current_animation = "down"
+        self.current_cycle = self.animations[self.current_animation]
+        self.current_frame = next(self.current_cycle)
 
-        self.pos = new_pos
+    def move(self, direction):
+        # Change animation based on direction
+        if direction != self.current_animation:
+            self.current_animation = direction
+            self.current_cycle = self.animations[direction]
+            self.current_frame = next(self.current_cycle)
 
-    def draw(self, screen):
-        pygame.draw.rect(
-            screen, "GREEN",
-            pygame.Rect(
-                self.pos.x * defines.map_tile_size,
-                self.pos.y * defines.map_tile_size,
-                defines.map_tile_size,
-                defines.map_tile_size
-            )
+    def draw(self, screen, camera):
+        # Draw the current frame with respect to the camera's offset
+        screen.blit(
+            self.current_frame,
+            (self.rect.x - camera.offset_x, self.rect.y - camera.offset_y),
         )
-
-    def move(self, dx, dy):
-        self.direction = pygame.Vector2(dx, dy)
