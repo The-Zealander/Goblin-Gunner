@@ -1,9 +1,7 @@
 import pygame
 import random
 from enum import Enum
-
 import defines
-
 
 # Define different tile types
 class TileType(Enum):
@@ -12,17 +10,15 @@ class TileType(Enum):
     TREE = 2
     WALL = 3
 
-
 # Colors for different tile types
 TILE_COLORS = {
-    TileType.GROUND: defines.brown,  # Gray
-    TileType.WATER: defines.blue,  # Blue
-    TileType.TREE: defines.green,  # Green
-    TileType.WALL: defines.gray,  # Red
+    TileType.GROUND: defines.brown,  # Brown for ground
+    TileType.WATER: defines.blue,  # Blue for water
+    TileType.TREE: defines.green,  # Green for trees
+    TileType.WALL: defines.gray,  # Gray for walls
 }
 
-
-# Game map class with borders around the edges
+# Game map class with customized drawing and walkable checks
 class TestGameMap:
     def __init__(self, width, height, tile_size):
         self.width = width  # Number of tiles wide
@@ -45,12 +41,23 @@ class TestGameMap:
             self.tiles[row][self.width - 1] = TileType.WALL  # Right wall
 
     def is_walkable(self, tile_x, tile_y):
-        # Check if a tile is walkable (not a wall, water, or tree)
+        # Check if a tile is walkable (ground only)
         if 0 <= tile_x < self.width and 0 <= tile_y < self.height:
-            return self.tiles[tile_y][tile_x] == TileType.GROUND
+            tile = self.tiles[tile_y][tile_x]
+            return tile == TileType.GROUND
         return False
 
-    def draw(self, screen, camera, tile_colors):
+    def get_tile_effect(self, tile_x, tile_y):
+        # Return the effect of the tile on movement
+        if 0 <= tile_x < self.width and 0 <= tile_y < self.height:
+            tile = self.tiles[tile_y][tile_x]
+            if tile == TileType.WATER:
+                return 0.5  # Half speed
+            elif tile == TileType.TREE or tile == TileType.WALL:
+                return 0.0  # No movement
+        return 1.0  # Normal speed for ground
+
+    def draw(self, screen, camera):
         # Draw only visible tiles to improve performance
         start_col = max(0, camera.offset_x // self.tile_size)
         end_col = min(self.width, (camera.offset_x + screen.get_width()) // self.tile_size + 1)
@@ -60,7 +67,7 @@ class TestGameMap:
         for row in range(start_row, end_row):
             for col in range(start_col, end_col):
                 tile_type = self.tiles[row][col]
-                color = tile_colors.get(tile_type, defines.brown)  # Default to white
+                color = TILE_COLORS.get(tile_type, defines.brown)  # Default to brown
                 pygame.draw.rect(
                     screen,
                     color,

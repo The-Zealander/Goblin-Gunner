@@ -22,8 +22,10 @@ def game_loop():
     # Create the correct map based on the mode
     if map_test_mode:
         game_map = test_map.TestGameMap(defines.test_map_width, defines.test_map_height, defines.map_tile_size)
+        tile_color = test_map.TILE_COLORS
     else:
         game_map = map.GameMap(defines.map_width, defines.map_height, defines.map_tile_size)
+        tile_color = map.TILE_COLORS
 
     # Create a player and a camera centered on the map
     player = Player(game_map.width * game_map.tile_size // 2, game_map.height * game_map.tile_size // 2)
@@ -75,8 +77,11 @@ def game_loop():
         # Clear the screen
         screen.fill(defines.black)  # Black background
 
-        # Draw the map
-        game_map.draw(screen, camera, map.TILE_COLORS)
+        # Inside the game loop
+        if map_test_mode:
+            game_map.draw(screen, camera)  # Correct arguments
+        else:
+            game_map.draw(screen, camera, tile_color)
 
         # Draw the player
         player.draw(screen, camera)
