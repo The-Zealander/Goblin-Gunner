@@ -39,25 +39,24 @@ def get_version_info():
 
 
 # Define common colors
-def get_colors():
-    return {
-        "BLACK": (0, 0, 0),
-        "SILVER": (192, 192, 192),
-        "GRAY": (128, 128, 128),
-        "WHITE": (255, 255, 255),
-        "MAROON": (128, 0, 0),
-        "RED": (255, 0, 0),
-        "GREEN": (0, 128, 0),
-        "LIME": (0, 255, 0),
-        "OLIVE": (128, 128, 0),
-        "YELLOW": (255, 255, 0),
-        "NAVY": (0, 0, 128),
-        "BLUE": (0, 0, 255),
-        "PURPLE": (128, 0, 128),
-        "FUCHSIA": (255, 0, 255),
-        "TEAL": (0, 128, 128),
-        "AQUA": (0, 255, 255),
-    }
+
+black = (0, 0, 0)
+silver = (192, 192, 192)
+gray = (128, 128, 128)
+white = (255, 255, 255)
+maroon = (128, 0, 0)
+red = (255, 0, 0)
+green = (0, 128, 0)
+lime = (0, 255, 0)
+olive = (128, 128, 0)
+yellow = (255, 255, 0)
+navy = (0, 0, 128)
+blue = (0, 0, 255)
+purple = (128, 0, 128)
+fuchsia = (255, 0, 255)
+teal = (0, 128, 128)
+aqua = (0, 255, 255)
+brown =(101,67,33)
 
 
 detec_rad = 10

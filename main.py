@@ -4,37 +4,35 @@ import pygame
 from player import Player
 from camera import Camera
 from map import GameMap, TileType
-
-# Constants
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
-TILE_SIZE = 32
+import defines
 
 # Colors for different tile types
 TILE_COLORS = {
-    TileType.GROUND: (100, 100, 100),  # Gray
-    TileType.WATER: (0, 0, 255),  # Blue
-    TileType.TREE: (0, 128, 0),  # Green
-    TileType.WALL: (255, 0, 0),  # Red
+    TileType.GROUND: defines.brown,  # Gray
+    TileType.WATER: defines.blue,  # Blue
+    TileType.TREE: defines.green,  # Green
+    TileType.WALL: defines.red,  # Red
 }
 
 
 def game_loop():
     pygame.init()
 
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-    pygame.display.set_caption("Camera Centered on Player")
+    screen = pygame.display.set_mode(defines.resolution)
+    pygame.display.set_caption(defines.GAME_NAME)
+
+    clock = pygame.time.Clock()  # Define the clock here
 
     # Create a large map with some features
     map_width = 50  # In tiles
     map_height = 50  # In tiles
-    game_map = GameMap(map_width, map_height, TILE_SIZE)
+    game_map = GameMap(map_width, map_height, defines.map_tile_size)
     game_map.add_forests(5, 5)  # Add some forests
     game_map.add_water_bodies(3, 4)  # Add some water bodies
 
     # Create a player and a camera
-    player = Player(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
-    camera = Camera(SCREEN_WIDTH, SCREEN_HEIGHT)
+    player = Player(defines.resolution[0] // 2, defines.resolution[1] // 2)
+    camera = Camera(defines.resolution[0], defines.resolution[1])
 
     clock = pygame.time.Clock()  # Control frame rate
     running = True
@@ -64,8 +62,8 @@ def game_loop():
             player.move("down")
 
         # Update player position and animation
-        player.rect.x += dx * 5  # Adjust movement speed
-        player.rect.y += dy * 5
+        player.rect.x += dx * defines.p_speed  # Adjust movement speed
+        player.rect.y += dy * defines.p_speed
         player.current_cycle = cycle(player.animations[player.current_animation])  # Reset cycle if needed
 
         # Update the camera to keep it centered on the player

@@ -15,7 +15,6 @@ def load_frames(frame_names):
     return frames
 
 
-
 class Player:
     def __init__(self, x, y):
         self.rect = pygame.Rect(x, y, 32, 32)  # 32x32 frame size
