@@ -1,18 +1,8 @@
-from itertools import cycle
-
 import pygame
-from player import Player
+from player import Player, Direction
 from camera import Camera
-from map import GameMap, TileType
+import map
 import defines
-
-# Colors for different tile types
-TILE_COLORS = {
-    TileType.GROUND: defines.brown,  # Gray
-    TileType.WATER: defines.blue,  # Blue
-    TileType.TREE: defines.green,  # Green
-    TileType.WALL: defines.red,  # Red
-}
 
 
 def game_loop():
@@ -21,14 +11,8 @@ def game_loop():
     screen = pygame.display.set_mode(defines.resolution)
     pygame.display.set_caption(defines.GAME_NAME)
 
-    clock = pygame.time.Clock()  # Define the clock here
-
-    # Create a large map with some features
-    map_width = 1920  # In tiles
-    map_height = 1080  # In tiles
-    game_map = GameMap(map_width, map_height, defines.map_tile_size)
-    game_map.add_forests(5, 5)  # Add some forests
-    game_map.add_water_bodies(3, 4)  # Add some water bodies
+    # Create a map with some random features
+    game_map = map.GameMap(defines.map_width, defines.map_height, defines.map_tile_size)
 
     # Create a player and a camera
     player = Player(defines.resolution[0] // 2, defines.resolution[1] // 2)
@@ -38,7 +22,7 @@ def game_loop():
     running = True
 
     while running:
-        dt = clock.tick(60) / 1000.0  # Delta time in seconds
+        dt = clock.tick(defines.FPS) / 1000.0  # Delta time in seconds
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -50,21 +34,29 @@ def game_loop():
 
         if keys[pygame.K_LEFT]:
             dx -= 1
-            player.move("left")
+            player.move(Direction.LEFT, dt)  # Update animation
         if keys[pygame.K_RIGHT]:
             dx += 1
-            player.move("right")
+            player.move(Direction.RIGHT, dt)  # Update animation
         if keys[pygame.K_UP]:
             dy -= 1
-            player.move("up")
+            player.move(Direction.UP, dt)  # Update animation
         if keys[pygame.K_DOWN]:
             dy += 1
-            player.move("down")
+            player.move(Direction.DOWN, dt)  # Update animation
 
-        # Update player position and animation
-        player.rect.x += dx * defines.p_speed  # Adjust movement speed
-        player.rect.y += dy * defines.p_speed
-        player.current_cycle = cycle(player.animations[player.current_animation])  # Reset cycle if needed
+        # Calculate new pixel coordinates
+        new_x = player.rect.x + dx * defines.p_speed
+        new_y = player.rect.y + dy * defines.p_speed
+
+        # Convert to tile coordinates
+        tile_x = new_x // defines.map_tile_size
+        tile_y = new_y // defines.map_tile_size
+
+        # If the new position is walkable, update player's position
+        if game_map.is_walkable(tile_x, tile_y):
+            player.rect.x = new_x
+            player.rect.y = new_y
 
         # Update the camera to keep it centered on the player
         camera.update(player)
@@ -73,7 +65,7 @@ def game_loop():
         screen.fill(defines.black)  # Black background
 
         # Draw the map
-        game_map.draw(screen, camera, TILE_COLORS)
+        game_map.draw(screen, camera, map.TILE_COLORS)
 
         # Draw the player
         player.draw(screen, camera)

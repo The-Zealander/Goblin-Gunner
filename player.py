@@ -15,35 +15,49 @@ def load_frames(frame_names):
     return frames
 
 
+# Define different movement directions
+class Direction:
+    LEFT = "left"
+    RIGHT = "right"
+    UP = "up"
+    DOWN = "down"
+
+
 class Player:
     def __init__(self, x, y):
         self.rect = pygame.Rect(x, y, 32, 32)  # 32x32 frame size
 
-        # Frame names for each direction
-        down_frames = [f"goblin_walk_down_{i}.png" for i in range(1, 7)]  # down_1.png to down_6.png
-        up_frames = [f"goblin_walk_up_{i}.png" for i in range(1, 7)]  # up_1.png to up_6.png
-        left_frames = [f"goblin_walk_left_{i}.png" for i in range(1, 7)]  # left_1.png to left_6.png
-        right_frames = [f"goblin_walk_right_{i}.png" for i in range(1, 7)]  # right_1.png to right_6.png
-
         # Load frames for each direction
+        down_frames = load_frames(["goblin_walk_down_{}.png".format(i) for i in range(1, 7)])
+        up_frames = load_frames(["goblin_walk_up_{}.png".format(i) for i in range(1, 7)])
+        left_frames = load_frames(["goblin_walk_left_{}.png".format(i) for i in range(1, 7)])
+        right_frames = load_frames(["goblin_walk_right_{}.png".format(i) for i in range(1, 7)])
+
         self.animations = {
-            "down": cycle(load_frames(down_frames)),  # Load and cycle frames
-            "up": cycle(load_frames(up_frames)),
-            "left": cycle(load_frames(left_frames)),
-            "right": cycle(load_frames(right_frames)),
+            Direction.DOWN: cycle(down_frames),  # Cycle through frames
+            Direction.UP: cycle(up_frames),
+            Direction.LEFT: cycle(left_frames),
+            Direction.RIGHT: cycle(right_frames),
         }
 
-        # Default to walking down
-        self.current_animation = "down"
+        self.current_animation = Direction.DOWN  # Default to walking down
         self.current_cycle = self.animations[self.current_animation]
-        self.current_frame = next(self.current_cycle)
+        self.current_frame = next(self.current_cycle)  # Current frame to be drawn
+        self.animation_speed = 0.1  # Speed for frame change
+        self.last_frame_time = 0  # Time tracking for animation
 
-    def move(self, direction):
-        # Change animation based on direction
+    def move(self, direction, dt):
+        # Change animation if direction changes
         if direction != self.current_animation:
             self.current_animation = direction
             self.current_cycle = self.animations[direction]
-            self.current_frame = next(self.current_cycle)
+            self.current_frame = next(self.current_cycle)  # Reset to the first frame
+
+        # Update the animation based on the speed
+        self.last_frame_time += dt
+        if self.last_frame_time >= self.animation_speed:
+            self.current_frame = next(self.current_cycle)  # Move to the next frame
+            self.last_frame_time = 0
 
     def draw(self, screen, camera):
         # Draw the current frame with respect to the camera's offset
