@@ -43,7 +43,7 @@ class Player:
         self.current_animation = Direction.DOWN  # Default to walking down
         self.current_cycle = self.animations[self.current_animation]
         self.current_frame = next(self.current_cycle)  # Current frame to be drawn
-        self.animation_speed = 0.1  # Speed for frame change
+        self.animation_speed = 0.09  # Speed for frame change
         self.last_frame_time = 0  # Time tracking for animation
 
     def move(self, direction, dt):

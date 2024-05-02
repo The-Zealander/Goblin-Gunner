@@ -65,4 +65,6 @@ p_speed = 5
 b_speed = 100
 map_width = 1920
 map_height = 1080
+test_map_width = 25
+test_map_height = 25
 map_tile_size = 32
