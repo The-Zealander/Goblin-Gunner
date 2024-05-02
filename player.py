@@ -1,6 +1,8 @@
 import pygame
 from itertools import cycle
 
+P_HP = 100
+
 
 # Function to load images from a directory
 def load_frames(frame_names):

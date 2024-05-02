@@ -7,6 +7,8 @@ import defines
 
 # Set to True for test mode, False for regular mode
 map_test_mode = True
+
+
 #player_test_mode = False
 #camera_test_mode = False
 #enemy_test_mode = False
@@ -22,10 +24,11 @@ def game_loop():
     # Create the correct map based on the mode
     if map_test_mode:
         game_map = test_map.TestGameMap(defines.test_map_width, defines.test_map_height, defines.map_tile_size)
-        tile_color = test_map.TILE_COLORS
+        # Add some water and forests
+        game_map.add_water(5, 5, 10, 10)  # Example water region
+        game_map.add_forest(15, 15, 5, 5)  # Example forest region
     else:
         game_map = map.GameMap(defines.map_width, defines.map_height, defines.map_tile_size)
-        tile_color = map.TILE_COLORS
 
     # Create a player and a camera centered on the map
     player = Player(game_map.width * game_map.tile_size // 2, game_map.height * game_map.tile_size // 2)
@@ -81,7 +84,7 @@ def game_loop():
         if map_test_mode:
             game_map.draw(screen, camera)  # Correct arguments
         else:
-            game_map.draw(screen, camera, tile_color)
+            game_map.draw(screen, camera, )
 
         # Draw the player
         player.draw(screen, camera)
