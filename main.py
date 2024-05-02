@@ -24,8 +24,8 @@ def game_loop():
     clock = pygame.time.Clock()  # Define the clock here
 
     # Create a large map with some features
-    map_width = 50  # In tiles
-    map_height = 50  # In tiles
+    map_width = 1920  # In tiles
+    map_height = 1080  # In tiles
     game_map = GameMap(map_width, map_height, defines.map_tile_size)
     game_map.add_forests(5, 5)  # Add some forests
     game_map.add_water_bodies(3, 4)  # Add some water bodies
@@ -70,7 +70,7 @@ def game_loop():
         camera.update(player)
 
         # Clear the screen
-        screen.fill((0, 0, 0))  # Black background
+        screen.fill(defines.black)  # Black background
 
         # Draw the map
         game_map.draw(screen, camera, TILE_COLORS)

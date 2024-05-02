@@ -36,11 +36,18 @@ class GameMap:
                     self.tiles[y + row][x + col] = TileType.WATER
 
     # Draw the map based on the camera's position
-    def draw(self, screen, camera, tile_colors):
-        for row in range(self.height):
-            for col in range(self.width):
+    def draw(self, screen, camera, TILE_COLORS):
+        # Determine visible tile boundaries based on camera's offset
+        start_col = max(0, camera.offset_x // self.tile_size)
+        end_col = min(self.width, (camera.offset_x + screen.get_width()) // self.tile_size + 1)
+        start_row = max(0, camera.offset_y // self.tile_size)
+        end_row = min(self.height, (camera.offset_y + screen.get_height()) // self.tile_size + 1)
+
+        # Draw only visible tiles
+        for row in range(start_row, end_row):
+            for col in range(start_col, end_col):
                 tile_type = self.tiles[row][col]
-                color = tile_colors.get(tile_type, (255, 255, 255))  # Default to white
+                color = TILE_COLORS.get(tile_type, (255, 255, 255))  # Default to white
                 pygame.draw.rect(
                     screen,
                     color,
