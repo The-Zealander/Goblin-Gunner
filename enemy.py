@@ -6,18 +6,18 @@ import calc
 class Enemy:
     def __init__(self, x, y):
         self.pos = pygame.Vector2(x, y)
-        self.speed = 0.01
+        self.speed = defines.e_speed
         self.direction = pygame.Vector2(0, 0)
         self.change_direction()
 
     def change_direction(self):
         # Randomize the direction (up, down, left, right, or stay still)
-        self.direction.x = random.choice([-1, 1])
-        self.direction.y = random.choice([-1, 1])
+        self.direction.x = random.choice([-1, 0, 1])
+        self.direction.y = random.choice([-1, 0, 1])
 
-    def update(self, player_pos):
+    def update(self, dt, player_pos):
         # Move based on direction
-        self.pos += self.direction * self.speed
+        self.pos += self.direction * self.speed * dt
 
         # Randomly change direction
         if random.random() < 0.02:
@@ -31,7 +31,9 @@ class Enemy:
             self.direction = direction_to_player
 
     def draw(self, screen):
-        pygame.draw.rect(screen, (255, 0, 255), pygame.Rect(
+        pygame.draw.rect(
+            screen, (255, 0, 0),
+            pygame.Rect(
                 self.pos.x * defines.map_tile_size,
                 self.pos.y * defines.map_tile_size,
                 defines.map_tile_size,

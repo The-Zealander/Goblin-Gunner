@@ -60,11 +60,18 @@ brown =(101,67,33)
 
 
 detec_rad = 10
-e_speed = 1
-p_speed = 5
+enemy_speed = 1
+big_enemy_speed = 1
+player_speed = 5
 b_speed = 100
 map_width = 1920
 map_height = 1080
 test_map_width = 50
 test_map_height = 50
 map_tile_size = 32
+player_size = 64
+small_enemey_size = 64
+big_enemy_size = 128
+enemy_melee_range = 5
+enemy_long_range = 100
+INVINCIBILITY_DURATION = 1  # 1 second invincibility after taking damage
