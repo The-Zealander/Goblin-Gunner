@@ -1,7 +1,6 @@
 import pygame
 import random
 from enum import Enum
-
 import defines
 
 
@@ -18,11 +17,11 @@ TILE_COLORS = {
     TileType.GROUND: defines.brown,  # Gray
     TileType.WATER: defines.blue,  # Blue
     TileType.TREE: defines.green,  # Green
-    TileType.WALL: defines.gray,  # Red
+    TileType.WALL: defines.gray,  # Gray
 }
 
 
-# Game map class with borders around the edges
+# Game map class with centered coordinates
 class GameMap:
     def __init__(self, width, height, tile_size):
         self.width = width  # Number of tiles wide
@@ -42,25 +41,42 @@ class GameMap:
         # Add walls to the left and right edges
         for row in range(self.height):
             self.tiles[row][0] = TileType.WALL  # Left wall
-            self.tiles[row][self.width - 1] = TileType.WALL  # Right wall
+            self.tiles[row][self.width - 1][col] = TileType.WALL  # Right wall
 
     def is_walkable(self, tile_x, tile_y):
-        # Check if a tile is walkable (not a wall, water, or tree)
-        if 0 <= tile_x < self.width and 0 <= tile_y < self.height:
-            return self.tiles[tile_y][tile_x] == TileType.GROUND
+        """Check if a tile is walkable (not a wall, water, or tree)"""
+        # Adjust for the new coordinate system (centered origin)
+        map_center_x = self.width // 2
+        map_center_y = self.height // 2
+
+        # Convert centered coordinates to array index
+        array_x = tile_x + map_center_x
+        array_y = tile_y + map_center_y
+
+        if 0 <= array_x < self.width and 0 <= array_y < self.height:
+            return self.tiles[array_y][array_x] == TileType.GROUND
         return False
 
-    def draw(self, screen, camera, tile_colors):
-        # Draw only visible tiles to improve performance
-        start_col = max(0, camera.offset_x // self.tile_size)
-        end_col = min(self.width, (camera.offset_x + screen.get_width()) // self.tile_size + 1)
-        start_row = max(0, camera.offset_y // self.tile_size)
-        end_row = min(self.height, (camera.offset_y + screen.get_height()) // self.tile_size + 1)
+    def draw(self, screen, camera):
+        """Draw only visible tiles to improve performance"""
+        map_center_x = self.width // 2
+        map_center_y = self.height // 2
+
+        # Adjust the rendering to account for the centered coordinate system
+        start_col = max(0, camera.offset_x // self.tile_size - map_center_x)
+        end_col = min(self.width, (camera.offset_x + screen.get_width()) // self.tile_size - map_center_x + 1)
+        start_row = max(0, camera.offset_y // self.tile_size - map_center_y)
+        end_row = min(self.height, (camera.offset_y + screen.get_height()) // self.tile_size - map_center_y + 1)
 
         for row in range(start_row, end_row):
             for col in range(start_col, end_col):
-                tile_type = self.tiles[row][col]
-                color = tile_colors.get(tile_type, (255, 255, 255))  # Default to white
+                # Convert centered coordinates to array index
+                array_x = col + map_center_x
+                array_y = row + map_center_y
+
+                tile_type = self.tiles[array_y][array_x]
+                color = TILE_COLORS.get(tile_type, (255, 255, 255))  # Default to white
+
                 pygame.draw.rect(
                     screen,
                     color,

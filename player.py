@@ -1,9 +1,10 @@
 import pygame
-import time
+import time  # This imports the 'time' module
 import defines
 from Animations import PlayerAnimation
 from player_mods import HealthModule
 from defines import player_size, player_speed
+
 
 # Define different movement directions
 class Direction:
@@ -11,6 +12,8 @@ class Direction:
     RIGHT = "right"
     UP = "up"
     DOWN = "down"
+
+
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
@@ -20,7 +23,8 @@ class Player(pygame.sprite.Sprite):
         self.animations = {
             "down": PlayerAnimation(["Goblin_sprites_walking/goblin_walk_down_{}.png".format(i) for i in range(1, 7)],
                                     0.09),
-            "up": PlayerAnimation(["Goblin_sprites_walking/goblin_walk_up_{}.png".format(i) for i in range(1, 7)], 0.09),
+            "up": PlayerAnimation(["Goblin_sprites_walking/goblin_walk_up_{}.png".format(i) for i in range(1, 7)],
+                                  0.09),
             "left": PlayerAnimation(["Goblin_sprites_walking/goblin_walk_left_{}.png".format(i) for i in range(1, 7)],
                                     0.09),
             "right": PlayerAnimation(["Goblin_sprites_walking/goblin_walk_right_{}.png".format(i) for i in range(1, 7)],
@@ -33,7 +37,6 @@ class Player(pygame.sprite.Sprite):
         self.health = HealthModule(100)  # Start with 100 health
         self.invincible = False  # Flag for invincibility
         self.invincibility_start = 0  # Start time for invincibility
-
 
     # Handle player movement and animation
     def move(self, direction, dt):
@@ -49,24 +52,27 @@ class Player(pygame.sprite.Sprite):
         if not self.invincible:
             self.health.take_damage(damage)  # Only take damage if not invincible
             self.invincible = True  # Enable invincibility
-            self.invincibility_start = time()  # Record start time
+            self.invincibility_start = time.time()  # Record start time
 
     def update(self, dt):
         # Manage invincibility duration
-        if self.invincible and (time() - self.invincibility_start) > defines.INVINCIBILITY_DURATION:
+        if self.invincible and (time.time() - self.invincibility_start) > defines.INVINCIBILITY_DURATION:
             self.invincible = False
 
     def draw(self, screen, camera):
         # If invincible, flash white
         if self.invincible:
-            if int(time() * 10) % 2 == 0:  # Toggle every 0.1 second for flashing effect
+            if int(time.time() * 10) % 2 == 0:  # Toggle every 0.1 second for flashing effect
                 screen.blit(
                     self.current_cycle.get_current_frame(),
                     (self.rect.x - camera.offset_x, self.rect.y - camera.offset_y),
                 )
             else:
+                # Drawing a transparent surface to simulate 'invisibility'
+                transparent_surface = pygame.Surface((player_size, player_size), pygame.SRCALPHA).convert_alpha()
+                transparent_surface.fill((255, 255, 255, 0))  # Making sure it’s completely transparent
                 screen.blit(
-                    pygame.Surface((player_size, player_size), pygame.SRCALPHA).convert_alpha(),
+                    transparent_surface,
                     (self.rect.x - camera.offset_x, self.rect.y - camera.offset_y),
                 )
         else:
@@ -74,3 +80,7 @@ class Player(pygame.sprite.Sprite):
                 self.current_cycle.get_current_frame(),
                 (self.rect.x - camera.offset_x, self.rect.y - camera.offset_y),
             )
+
+        def update_position(self, dx, dy):
+            self.rect.x += dx * player_speed
+            self.rect.y += dy * player_speed

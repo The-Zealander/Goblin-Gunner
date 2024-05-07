@@ -54,7 +54,7 @@ class Button:
 class MainMenu:
     def __init__(self):
         # Get current screen width and height
-        screen_width, screen_height = defines.get_current_resolution()
+        screen_width, screen_height = defines.resolution
 
         # Initialize buttons with relative positions
         button_width = 200
@@ -108,7 +108,7 @@ class MainMenu:
 
 def main():
     pygame.init()  # Initialize pygame
-    screen_width, screen_height = defines.get_current_resolution()  # Get screen dimensions
+    screen_width, screen_height = defines.resolution  # Get screen dimensions
 
     screen = pygame.display.set_mode((screen_width, screen_height))
     pygame.display.set_caption("Main Menu")

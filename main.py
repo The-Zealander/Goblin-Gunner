@@ -1,109 +1,72 @@
 import pygame
-from player import Player, Direction
-from camera import Camera
-from enemy import Enemy
-import map
-import test_map
-import defines
-import start_menu
+import sys
+from the_game import Game  # The class that contains the game logic
+from titlescreen import TitleScreen  # The title screen
+from start_menu import MainMenu  # The menu screen
 
-# Set to True for test mode, False for regular mode
-map_test_mode = True
-player_test_mode = False
-camera_test_mode = False
-enemy_test_mode = False
-calculations_test_mode = False
+# Constants
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
 
+# Game States
+TITLE_SCREEN = 0
+MENU_SCREEN = 1
+GAME_SCREEN = 2
 
-def game_loop():
-    pygame.init()
+# Initialize pygame and set up the display
+pygame.init()
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("My Game with Camera")
 
-    screen = pygame.display.set_mode(defines.resolution)
-    pygame.display.set_caption(defines.GAME_NAME)
+# Game state and main loop flag
+game_state = TITLE_SCREEN
+running = True
 
-    # Create the correct map based on the mode
-    if map_test_mode:
-        game_map = test_map.TestGameMap(defines.test_map_width, defines.test_map_height, defines.map_tile_size)
-        # Add some water and forests
-        game_map.add_water(5, 5, 10, 10)  # Example water region
-        game_map.add_forest(15, 15, 5, 5)  # Example forest region
-    else:
-        game_map = map.GameMap(defines.map_width, defines.map_height, defines.map_tile_size)
+# Create instances of different screens and game components
+title_screen = TitleScreen()  # Assuming TitleScreen has a render method
+menu = MainMenu()  # Assuming Menu has a render method
+game = Game(screen)  # This is your game class with the camera system
 
-    # Create a player and a camera centered on the map
-    player = Player(game_map.width * game_map.tile_size // 2, game_map.height * game_map.tile_size // 2)
-    camera = Camera(defines.resolution[0], defines.resolution[1])
-    # Create an enemy
-    enemy = Enemy(100, 100, game_map)  # Start enemy at a specific position
+# Main game loop
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False  # Exit the game when the quit event is triggered
 
+        if game_state == TITLE_SCREEN:
+            # Transition to menu if a specific key is pressed, like SPACE
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                game_state = MENU_SCREEN
+            title_screen.handle_event(event)  # Allow title screen to handle events
 
-    clock = pygame.time.Clock()  # Control frame rate
-    running = True
+        elif game_state == MENU_SCREEN:
+            # Transition to game if a key is pressed, like '1'
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
+                game_state = GAME_SCREEN
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                running = False  # Quit the game
+            menu.handle_event(event)  # Allow menu to handle events
 
-    while running:
-        dt = clock.tick(defines.FPS) / 1000.0  # Delta time in seconds
+        elif game_state == GAME_SCREEN:
+            game.handle_event(event)  # Pass events to the game
+            # Return to menu with ESC
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                game_state = MENU_SCREEN
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
+    # Rendering and updating based on the game state
+    if game_state == TITLE_SCREEN:
+        title_screen.render(screen)  # Render the title screen
 
-        # Player movement logic
-        dx, dy = 0, 0
-        keys = pygame.key.get_pressed()
+    elif game_state == MENU_SCREEN:
+        menu.render(screen)  # Render the menu
 
-        if keys[pygame.K_LEFT]:
-            dx -= 1
-            player.move(Direction.LEFT, dt)  # Update animation
-        if keys[pygame.K_RIGHT]:
-            dx += 1
-            player.move(Direction.RIGHT, dt)  # Update animation
-        if keys[pygame.K_UP]:
-            dy -= 1
-            player.move(Direction.UP, dt)  # Update animation
-        if keys[pygame.K_DOWN]:
-            dy += 1
-            player.move(Direction.DOWN, dt)  # Update animation
-        if keys[pygame.K_p]:
-            start_menu()
+    elif game_state == GAME_SCREEN:
+        game.update()  # Update game logic
+        game.render()  # Render the game elements with the camera
 
-        # Calculate new pixel coordinates
-        new_x = player.rect.x + dx * defines.player_speed
-        new_y = player.rect.y + dy * defines.player_speed
+    # Update the display
+    pygame.display.flip()
 
-        # Convert to tile coordinates
-        tile_x = new_x // defines.map_tile_size
-        tile_y = new_y // defines.map_tile_size
-
-        # If the new position is walkable, update player's position
-        if game_map.is_walkable(tile_x, tile_y):
-            player.update_position(dx, dy)
-
-        # Update the player to manage invincibility
-        player.update(dt)  # Ensure invincibility duration is managed
-
-        # Update the camera to keep it centered on the player
-        camera.update(player)
-
-        # Update the enemy behavior
-        enemy.update(player,dt)  # Ensure enemy moves according to its logic
-
-        # Clear the screen
-        screen.fill(defines.black)  # Black background
-
-        # Inside the game loop
-        if map_test_mode:
-            game_map.draw(screen, camera)  # Correct arguments
-        else:
-            game_map.draw(screen, camera, )
-
-        # Draw the player
-        player.draw(screen, camera)
-        enemy.draw(screen,camera)
-
-        pygame.display.flip()  # Update the screen with the latest frame
-
-    pygame.quit()
-
-
-if __name__ == "__main__":
-    game_loop()
+# Clean up when exiting the game loop
+pygame.quit()
+sys.exit()
