@@ -25,7 +25,7 @@ def game_loop():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Camera Centered on Player")
 
-    # Create a large map with some features
+    # Create large map with some features
     map_width = 50  # In tiles
     map_height = 50  # In tiles
     game_map = GameMap(map_width, map_height, TILE_SIZE)
