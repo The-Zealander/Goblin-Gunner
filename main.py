@@ -1,12 +1,10 @@
 import pygame
 import sys
+
+import defines
 from the_game import Game  # The class that contains the game logic
 from titlescreen import TitleScreen  # The title screen
 from start_menu import MainMenu  # The menu screen
-
-# Constants
-SCREEN_WIDTH = 1920
-SCREEN_HEIGHT = 1080
 
 # Game States
 TITLE_SCREEN = 0
@@ -15,8 +13,8 @@ GAME_SCREEN = 2
 
 # Initialize pygame and set up the display
 pygame.init()
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("My Game with Camera")
+screen = pygame.display.set_mode(defines.resolution)
+pygame.display.set_caption(defines.GAME_NAME)
 
 # Game state and main loop flag
 game_state = TITLE_SCREEN
