@@ -6,7 +6,7 @@ import calc
 class Enemy:
     def __init__(self, x, y):
         self.pos = pygame.Vector2(x, y)
-        self.speed = defines.e_speed
+        self.speed = defines.enemy_speed
         self.direction = pygame.Vector2(0, 0)
         self.change_direction()
 

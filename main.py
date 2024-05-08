@@ -5,8 +5,8 @@ from titlescreen import TitleScreen  # The title screen
 from start_menu import MainMenu  # The menu screen
 
 # Constants
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 1920
+SCREEN_HEIGHT = 1080
 
 # Game States
 TITLE_SCREEN = 0
@@ -37,7 +37,7 @@ while running:
             # Transition to menu if a specific key is pressed, like SPACE
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 game_state = MENU_SCREEN
-            title_screen.handle_event(event)  # Allow title screen to handle events
+                title_screen.handle_event(event)  # Allow title screen to handle events
 
         elif game_state == MENU_SCREEN:
             # Transition to game if a key is pressed, like '1'

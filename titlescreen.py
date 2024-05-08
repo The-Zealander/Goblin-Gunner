@@ -53,9 +53,9 @@ class TitleScreen:
             # Adjust for the next line
             start_y -= text_rect.height + 5  # Adjust spacing
 
-    def handle_events(self, events):
+    def handle_event(self, event):
         # Handle events like quitting or switching scenes
-        for event in events:
+        for event in event:
             if event.type == pygame.QUIT:
                 return "quit"
             if event.type == pygame.KEYDOWN:

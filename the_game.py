@@ -13,14 +13,14 @@ class Game:
         self.screen_height = screen.get_height()
         self.camera = pygame.Rect(0, 0, self.screen_width, self.screen_height)
         self.player = player.Player(0,0)  # Assuming the Player class has a position attribute
-        self.enemies = [enemy.Enemy() for _ in range(5)]  # A list of enemies
-        self.map = test_map.Map()  # Assuming the Map class handles map rendering
+        self.enemies = [enemy.Enemy(1, 1) for _ in range(5)]  # A list of enemies
+        self.map = test_map.TestGameMap(1920, 1080, 32)  # Assuming the Map class handles map rendering
 
     def update_camera(self):
         """Update the camera's position to center on the player."""
         half_width = self.screen_width // 2
         half_height = self.screen_height // 2
-        self.camera.center = self.player.position  # Center the camera on the player's position
+        self.camera.center = self.player.position()  # Center the camera on the player's position
 
         # Ensure the camera doesn't go out of map bounds
         self.camera.clamp_ip(self.map.get_bounds())  # The map should have a method to get bounds
