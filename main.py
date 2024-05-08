@@ -35,17 +35,19 @@ while running:
 
         if game_state == TITLE_SCREEN:
             # Transition to menu if a specific key is pressed, like SPACE
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                 game_state = MENU_SCREEN
-                title_screen.handle_event(event)  # Allow title screen to handle events
 
         elif game_state == MENU_SCREEN:
-            # Transition to game if a key is pressed, like '1'
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
+            # Transition to game if a key is pressed
+            action = menu.handle_event(event)
+            if action == "quit":
+                running = False
+            elif action == "start_game":
                 game_state = GAME_SCREEN
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                running = False  # Quit the game
-            menu.handle_event(event)  # Allow menu to handle events
+            elif action == "open_settings":
+                print("ingenting")
+
 
         elif game_state == GAME_SCREEN:
             game.handle_event(event)  # Pass events to the game

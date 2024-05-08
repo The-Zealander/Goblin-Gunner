@@ -18,12 +18,12 @@ class TitleScreen:
         # Title text setup
         self.font_title = defines.TITLE_FONT
         self.title_text = self.font_title.render("GOBLIN GUNNER", True, "GREEN")
-        self.title_text_rect = self.title_text.get_rect(center=(defines.resolution[0] / 2, 100))  # Positioned at top-center
+        self.title_text_rect = self.title_text.get_rect(center=(defines.resolution[0] / 2, 250))  # Positioned at top-center
 
         # Instruction text setup
         self.font_instructions = defines.SMALL_FONT
         self.instruction_text = self.font_instructions.render("Press Enter to Start", True, "WHITE")
-        self.instruction_text_rect = self.instruction_text.get_rect(center=(defines.resolution[0] / 2, defines.resolution[1] - 100))  # Positioned near the bottom
+        self.instruction_text_rect = self.instruction_text.get_rect(center=(defines.resolution[0] / 2, 800))  # Positioned near the bottom
 
         # Retrieve version information
         version_info = defines.get_version_info()

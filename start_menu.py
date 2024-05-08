@@ -61,7 +61,7 @@ class MainMenu:
         button_height = 50
         button_offset = 60  # Offset between buttons
 
-        start_y = screen_height - 330  # Starting Y-position for buttons
+        start_y = screen_height - 400  # Starting Y-position for buttons
 
         self.play_button = Button(
             "START",
@@ -75,13 +75,12 @@ class MainMenu:
         )
         self.quit_button = Button(
             "EXIT",
-            (screen_width // 2 - button_width // 2, start_y + 3 * button_offset),
+            (screen_width // 2 - button_width // 2, start_y + 2 * button_offset),
             (button_width, button_height)
         )
 
-    def handle_events(self, events):
+    def handle_event(self, event):
         # Handle events for each button
-        for event in events:
             if self.play_button.handle_event(event):
                 return "start_game"
             if self.settings_button.handle_event(event):
@@ -90,7 +89,6 @@ class MainMenu:
                 return "quit"
             if event.type == pygame.QUIT:
                 return "quit"
-        return None
 
     def update(self):
         # Currently, no additional update logic
@@ -118,10 +116,10 @@ def main():
 
     running = True
     while running:
-        events = pygame.event.get()
+        event = pygame.event.get()
 
         # Handle events and check transitions
-        action = main_menu.handle_events(events)
+        action = main_menu.handle_event(event)
         if action == "quit":
             running = False
         elif action == "start_game":
