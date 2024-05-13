@@ -56,9 +56,9 @@ purple = (128, 0, 128)
 fuchsia = (255, 0, 255)
 teal = (0, 128, 128)
 aqua = (0, 255, 255)
-brown =(101,67,33)
+brown = (101, 67, 33)
 
-
+# define various shit
 detec_rad = 10
 enemy_speed = 1
 big_enemy_speed = 1

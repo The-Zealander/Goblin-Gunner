@@ -54,10 +54,16 @@ class Player(pygame.sprite.Sprite):
             self.invincible = True  # Enable invincibility
             self.invincibility_start = time.time()  # Record start time
 
-    def update(self, dt):
+    def update(self, dt, player_position):
         # Manage invincibility duration
         if self.invincible and (time.time() - self.invincibility_start) > defines.INVINCIBILITY_DURATION:
             self.invincible = False
+
+        # Update animation cycle with the time delta
+        self.current_cycle.update(dt)
+
+        # Update player's position based on the provided position
+        self.rect.x, self.rect.y = player_position
 
     def draw(self, screen, camera):
         # If invincible, flash white
@@ -67,20 +73,16 @@ class Player(pygame.sprite.Sprite):
                     self.current_cycle.get_current_frame(),
                     (self.rect.x - camera.offset_x, self.rect.y - camera.offset_y),
                 )
-            else:
-                # Drawing a transparent surface to simulate 'invisibility'
-                transparent_surface = pygame.Surface((player_size, player_size), pygame.SRCALPHA).convert_alpha()
-                transparent_surface.fill((255, 255, 255, 0))  # Making sure it’s completely transparent
-                screen.blit(
-                    transparent_surface,
-                    (self.rect.x - camera.offset_x, self.rect.y - camera.offset_y),
-                )
         else:
-            screen.blit(
-                self.current_cycle.get_current_frame(),
-                (self.rect.x - camera.offset_x, self.rect.y - camera.offset_y),
-            )
+            # Drawing a transparent surface to simulate 'invisibility'
+            transparent_surface = pygame.Surface((player_size, player_size), pygame.SRCALPHA).convert_alpha()
+            transparent_surface.fill((255, 255, 255, 0))  # Making sure it’s completely transparent
+            screen.blit(transparent_surface, (self.rect.x - camera.offset_x, self.rect.y - camera.offset_y))
 
-        def update_position(self, dx, dy):
-            self.rect.x += dx * player_speed
-            self.rect.y += dy * player_speed
+        # Blit the current animation frame
+        screen.blit(self.current_cycle.get_current_frame(),
+                    (self.rect.x - camera.offset_x, self.rect.y - camera.offset_y))
+
+    def update_position(self, dx, dy):
+        self.rect.x += dx * player_speed
+        self.rect.y += dy * player_speed

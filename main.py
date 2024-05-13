@@ -1,7 +1,7 @@
 import pygame
 import sys
-
 import defines
+import player
 from the_game import Game  # The class that contains the game logic
 from titlescreen import TitleScreen  # The title screen
 from start_menu import MainMenu  # The menu screen
@@ -15,6 +15,7 @@ GAME_SCREEN = 2
 pygame.init()
 screen = pygame.display.set_mode(defines.resolution)
 pygame.display.set_caption(defines.GAME_NAME)
+clock = pygame.time.Clock()
 
 # Game state and main loop flag
 game_state = TITLE_SCREEN
@@ -23,10 +24,11 @@ running = True
 # Create instances of different screens and game components
 title_screen = TitleScreen()  # Assuming TitleScreen has a render method
 menu = MainMenu()  # Assuming Menu has a render method
-game = Game(screen)  # This is your game class with the camera system
+game = Game()  # This is your game class with the camera system
 
 # Main game loop
 while running:
+    dt = clock.tick(60) / 1000.0  # Get delta time in seconds (assuming a target frame rate of 60 FPS)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False  # Exit the game when the quit event is triggered
@@ -61,8 +63,10 @@ while running:
         menu.render(screen)  # Render the menu
 
     elif game_state == GAME_SCREEN:
-        game.update()  # Update game logic
-        game.render()  # Render the game elements with the camera
+        game.update(dt)  # Update game logic
+        game.render(screen)  # Render the game elements with the camera
+        player.update(dt, player_position)  # Update the player with the time delta and player's position
+
 
     # Update the display
     pygame.display.flip()

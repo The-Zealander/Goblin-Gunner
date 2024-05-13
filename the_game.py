@@ -1,56 +1,44 @@
 import pygame
 import defines
-import player
-import enemy
-import map
-import test_map
+from player import Player
+from enemy import Enemy
+from map import GameMap
+from camera import Camera
 
 
 class Game:
-    def __init__(self, screen):
-        self.screen = screen
-        self.screen_width = screen.get_width()
-        self.screen_height = screen.get_height()
-        self.camera = pygame.Rect(0, 0, self.screen_width, self.screen_height)
-        self.player = player.Player(0,0)  # Assuming the Player class has a position attribute
-        self.enemies = [enemy.Enemy(1, 1) for _ in range(5)]  # A list of enemies
-        self.map = test_map.TestGameMap(1920, 1080, 32)  # Assuming the Map class handles map rendering
+    def __init__(self):
+        self.camera = None
+        self.player = None
+        self.enemies = []
+        self.game_map = None
+        self.initialize()
 
-    def update_camera(self):
-        """Update the camera's position to center on the player."""
-        half_width = self.screen_width // 2
-        half_height = self.screen_height // 2
-        self.camera.center = self.player.position()  # Center the camera on the player's position
+    def initialize(self):
+        self.camera = Camera(defines.resolution[0], defines.resolution[1])
+        self.player = Player(0, 0)  # Assuming the Player class has a position attribute
+        self.enemies = [Enemy(100, 100) for _ in range(5)]  # A list of enemies
+        self.game_map = GameMap(1920, 1080, 32)  # Assuming the GameMap class handles map rendering
 
-        # Ensure the camera doesn't go out of map bounds
-        self.camera.clamp_ip(self.map.get_bounds())  # The map should have a method to get bounds
-
-    def update(self):
+    def update(self, dt):
         """Update game logic."""
-        self.player.update()  # Update player state, like movement
+        self.player.update(dt)  # Update player state, like movement
         for enemy in self.enemies:
-            enemy.update()  # Update enemy logic
+            enemy.update(dt,player_pos)  # Update enemy logic
 
-        self.update_camera()  # Update camera position based on the player's location
+        self.camera.update(self.player.rect.center)  # Update camera position based on the player's location
 
-    def render(self):
+    def render(self, screen):
         """Render the game with the camera's offset."""
         # Clear the screen with a background color
-        self.screen.fill(defines.black)
-
-        # Calculate the camera offset
-        camera_offset = (-self.camera.x, -self.camera.y)
+        screen.fill(defines.black)
 
         # Render the map, shifted by the camera's position
-        self.map.render(self.screen, camera_offset)
+        self.game_map.render(screen, self.camera)
 
         # Render the player with the camera's offset
-        self.player.render(self.screen, camera_offset)
+        self.player.render(screen, self.camera)
 
         # Render the enemies with the camera's offset
         for enemy in self.enemies:
-            enemy.render(self.screen, camera_offset)
-
-    def handle_event(self, event):
-        """Handle events like key presses, mouse clicks, etc."""
-        self.player.handle_event(event)  # Pass events to the player for interaction
+            enemy.render(screen, self.camera)

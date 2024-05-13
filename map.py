@@ -41,7 +41,7 @@ class GameMap:
         # Add walls to the left and right edges
         for row in range(self.height):
             self.tiles[row][0] = TileType.WALL  # Left wall
-            self.tiles[row][self.width - 1][col] = TileType.WALL  # Right wall
+            self.tiles[row][self.width - 1] = TileType.WALL  # Right wall
 
     def is_walkable(self, tile_x, tile_y):
         """Check if a tile is walkable (not a wall, water, or tree)"""
