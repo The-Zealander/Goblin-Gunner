@@ -6,24 +6,32 @@ class TitleScreen:
     def __init__(self):
         # Load an image for the title screen
         try:
-            self.image = pygame.image.load("images/Goblincampimagepixels.png")
+            self.image_original = pygame.image.load("images/Goblincampimagepixels.png")
         except FileNotFoundError:
             print("Title screen image not found. Defaulting to black screen.")
-            self.image = pygame.Surface(defines.resolution)
-            self.image.fill("BLACK")
+            self.image_original = pygame.Surface(defines.resolution)
+            self.image_original.fill(defines.black)
+
+        # Assign the original image to self.image
+        self.image = self.image_original
+
+        # Scale the image to match the resolution
+        self.image = pygame.transform.scale(self.image, defines.resolution)
 
         # Position image at the center of the screen
         self.image_rect = self.image.get_rect(center=(defines.resolution[0] / 2, defines.resolution[1] / 2))
 
         # Title text setup
         self.font_title = defines.TITLE_FONT
-        self.title_text = self.font_title.render("GOBLIN GUNNER", True, "GREEN")
-        self.title_text_rect = self.title_text.get_rect(center=(defines.resolution[0] / 2, 100))  # Positioned at top-center
+        self.title_text = self.font_title.render("GOBLIN GUNNER", True, defines.green)
+        self.title_text_rect = self.title_text.get_rect(
+            center=(defines.resolution[0] / 2, 100))  # Positioned at top-center
 
         # Instruction text setup
         self.font_instructions = defines.SMALL_FONT
-        self.instruction_text = self.font_instructions.render("Press Enter to Start", True, "WHITE")
-        self.instruction_text_rect = self.instruction_text.get_rect(center=(defines.resolution[0] / 2, defines.resolution[1] - 100))  # Positioned near the bottom
+        self.instruction_text = self.font_instructions.render("Press Enter to Start", True, defines.white)
+        self.instruction_text_rect = self.instruction_text.get_rect(
+            center=(defines.resolution[0] / 2, defines.resolution[1] - 100))  # Positioned near the bottom
 
         # Retrieve version information
         version_info = defines.get_version_info()

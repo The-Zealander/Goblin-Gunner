@@ -28,7 +28,6 @@ game = Game()  # This is your game class with the camera system
 
 # Main game loop
 while running:
-    dt = clock.tick(60) / 1000.0  # Get delta time in seconds (assuming a target frame rate of 60 FPS)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False  # Exit the game when the quit event is triggered
@@ -50,7 +49,7 @@ while running:
 
 
         elif game_state == GAME_SCREEN:
-            game.handle_event(event)  # Pass events to the game
+            game.handle_events(event)  # Pass events to the game
             # Return to menu with ESC
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 game_state = MENU_SCREEN
@@ -63,10 +62,9 @@ while running:
         menu.render(screen)  # Render the menu
 
     elif game_state == GAME_SCREEN:
-        game.update(dt)  # Update game logic
+        game.update(defines.FPS)  # Update game logic
         game.render(screen)  # Render the game elements with the camera
-        player.update(dt, player_position)  # Update the player with the time delta and player's position
-
+        player.update(defines.FPS, player.position)
 
     # Update the display
     pygame.display.flip()

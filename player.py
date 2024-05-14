@@ -86,3 +86,7 @@ class Player(pygame.sprite.Sprite):
     def update_position(self, dx, dy):
         self.rect.x += dx * player_speed
         self.rect.y += dy * player_speed
+
+    def position(self):
+        """Return the current position of the player."""
+        return self.rect.x, self.rect.y

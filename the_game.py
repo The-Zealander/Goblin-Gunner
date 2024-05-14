@@ -1,10 +1,9 @@
 import pygame
-import defines
-from player import Player
+from player import Player  # Assuming the Player class is defined in a separate file
 from enemy import Enemy
 from map import GameMap
 from camera import Camera
-
+import defines
 
 class Game:
     def __init__(self):
@@ -22,9 +21,11 @@ class Game:
 
     def update(self, dt):
         """Update game logic."""
-        self.player.update(dt)  # Update player state, like movement
+        player_position = self.player.position()  # Get the current position of the player
+        self.player.update(dt, player_position)  # Update player state, like movement
+
         for enemy in self.enemies:
-            enemy.update(dt,player_pos)  # Update enemy logic
+            enemy.update(dt, player_position)  # Update enemy logic
 
         self.camera.update(self.player.rect.center)  # Update camera position based on the player's location
 
