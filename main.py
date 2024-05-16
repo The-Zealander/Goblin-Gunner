@@ -7,8 +7,6 @@ import defines
 
 # Set to True for test mode, False for regular mode
 map_test_mode = True
-
-
 #player_test_mode = False
 #camera_test_mode = False
 #enemy_test_mode = False
