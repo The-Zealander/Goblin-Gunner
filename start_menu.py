@@ -2,41 +2,16 @@ import pygame
 import sys
 import defines
 
-#Button colors
-BUTTON_COLOR_INACTIVE = defines.navy
-BUTTON_COLOR_ACTIVE = defines.blue
-# Initialize Pygame
 pygame.init()
+pygame.mixer.init()  # Initialize sound system
 
-# Set up the screen
-screen = pygame.display.set_mode(defines.resolution)
+# Constants for button colors
+BUTTON_COLOR_INACTIVE = "NAVY"
+BUTTON_COLOR_ACTIVE = "BLUE"
 
-# Sounds
-hit_sound = pygame.mixer.Sound(defines.BUTTON_CLICK_SOUND)
+# Load sound effect for button click
+button_click_sound = pygame.mixer.Sound(defines.BUTTON_CLICK_SOUND)
 
-class Button:
-    def __init__(self, x, y, color, text):
-        self.x = x
-        self.y = y
-        self.color = color
-        self.text = text
-        self.selected = False
-
-    def draw(self):
-        pygame.draw.rect(screen, self.color, (self.x, self.y, 200, 50))
-        text_surface = defines.GENERAL_FONT.render(self.text, True, defines.black)
-        text_rect = text_surface.get_rect(center=(self.x + 200 // 2, self.y + 50 // 2))
-        screen.blit(text_surface, text_rect)
-
-    def play_hit_sound(self):
-        hit_sound.play()
-
-    def increase_size(self):
-        self.color = defines.green
-        pygame.draw.rect(screen, self.color, (self.x - 5, self.y - 5, 200 + 10, 50 + 10))
-
-    def decrease_size(self):
-        self.color = defines.red
 
 class Button:
     def __init__(self, text, position, size, font_size=30, color=BUTTON_COLOR_INACTIVE, hover_color=BUTTON_COLOR_ACTIVE):
@@ -51,7 +26,7 @@ class Button:
 
     def draw(self, screen):
         # Draw button with hover effect
-        color = self.hover_color if self.hovered() else self.color
+        color = self.hover_color if self.selected() else self.color
         pygame.draw.rect(screen, color, self.rect)
 
         # Render text
@@ -59,44 +34,106 @@ class Button:
         text_rect = text_surface.get_rect(center=self.rect.center)
         screen.blit(text_surface, text_rect)
 
-    def hovered(self):
+    def selected(self):
         # Check if mouse is over the button
         return self.rect.collidepoint(pygame.mouse.get_pos())
 
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            if self.hovered():
-                pygame.mixer.Sound.play(defines.BUTTON_CLICK_SOUND)  # Play sound on click
+            if self.selected():
+                pygame.mixer.Sound.play(button_click_sound)  # Play sound on click
                 self.clicked = True
         elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-            if self.clicked and self.hovered():
+            if self.clicked and self.selected():
                 self.clicked = False
                 return True  # Button click action
             self.clicked = False
         return False
 
-# Main loop
-selected_button_index = 0
-while True:
-    screen.fill(defines.white)
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
-                selected_button_index = (selected_button_index - 1) % len(buttons)
-            elif event.key == pygame.K_DOWN:
-                selected_button_index = (selected_button_index + 1) % len(buttons)
-            elif event.key == pygame.K_SPACE:
-                buttons[selected_button_index].play_hit_sound()
+class MainMenu:
+    def __init__(self):
+        # Get current screen width and height
+        screen_width, screen_height = defines.resolution
 
-    for i, button in enumerate(buttons):
-        if i == selected_button_index:
-            button.increase_size()
-        else:
-            button.decrease_size()
-        button.draw()
+        # Initialize buttons with relative positions
+        button_width = 200
+        button_height = 50
+        button_offset = 60  # Offset between buttons
 
-    pygame.display.flip()
+        start_y = screen_height - 400  # Starting Y-position for buttons
+
+        self.play_button = Button(
+            "START",
+            (screen_width // 2 - button_width // 2, start_y),
+            (button_width, button_height)
+        )
+        self.settings_button = Button(
+            "SETTINGS",
+            (screen_width // 2 - button_width // 2, start_y + button_offset),
+            (button_width, button_height)
+        )
+        self.quit_button = Button(
+            "EXIT",
+            (screen_width // 2 - button_width // 2, start_y + 2 * button_offset),
+            (button_width, button_height)
+        )
+
+    def handle_event(self, event):
+        # Handle events for each button
+            if self.play_button.handle_event(event):
+                return "start_game"
+            if self.settings_button.handle_event(event):
+                return "open_settings"
+            if self.quit_button.handle_event(event):
+                return "quit"
+            if event.type == pygame.QUIT:
+                return "quit"
+
+    def update(self):
+        # Currently, no additional update logic
+        pass
+
+    def render(self, screen):
+        # Clear the screen
+        screen.fill("WHITE")
+
+        # Draw buttons
+        self.play_button.draw(screen)
+        self.settings_button.draw(screen)
+        self.quit_button.draw(screen)
+
+
+def main():
+    pygame.init()  # Initialize pygame
+    screen_width, screen_height = defines.resolution  # Get screen dimensions
+
+    screen = pygame.display.set_mode((screen_width, screen_height))
+    pygame.display.set_caption("Main Menu")
+
+    # Initialize main menu
+    main_menu = MainMenu()
+
+    running = True
+    while running:
+        event = pygame.event.get()
+
+        # Handle events and check transitions
+        action = main_menu.handle_event(event)
+        if action == "quit":
+            running = False
+        elif action == "start_game":
+            print("Starting game...")
+            # Logic to transition to the game scene
+        elif action == "open_settings":
+            print("Opening settings...")
+            # Logic to transition to the settings scene
+
+        # Update and render menu
+        main_menu.update()
+        main_menu.render(screen)
+
+        pygame.display.flip()  # Refresh display
+
+    pygame.quit()
+    sys.exit()  # Exit when done
