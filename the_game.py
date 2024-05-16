@@ -5,6 +5,7 @@ from map import GameMap
 from camera import Camera
 import defines
 
+
 class Game:
     def __init__(self):
         self.camera = None
@@ -35,11 +36,24 @@ class Game:
         screen.fill(defines.black)
 
         # Render the map, shifted by the camera's position
-        self.game_map.render(screen, self.camera)
+        self.game_map.draw(screen, self.camera)
 
         # Render the player with the camera's offset
-        self.player.render(screen, self.camera)
+        self.player.draw(screen, self.camera)
 
-        # Render the enemies with the camera's offset
-        for enemy in self.enemies:
-            enemy.render(screen, self.camera)
+
+    def handle_events(self):
+        """Handle keyboard events to move the player."""
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_w:
+                    self.player.move_up()
+                elif event.key == pygame.K_s:
+                    self.player.move_down()
+                elif event.key == pygame.K_a:
+                    self.player.move_left()
+                elif event.key == pygame.K_d:
+                    self.player.move_right()

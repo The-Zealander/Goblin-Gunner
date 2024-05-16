@@ -1,7 +1,7 @@
 import pygame
 import sys
 import defines
-import player
+from player import Player
 from the_game import Game  # The class that contains the game logic
 from titlescreen import TitleScreen  # The title screen
 from start_menu import MainMenu  # The menu screen
@@ -49,7 +49,7 @@ while running:
 
 
         elif game_state == GAME_SCREEN:
-            game.handle_events(event)  # Pass events to the game
+            game.handle_events()  # Pass events to the game
             # Return to menu with ESC
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 game_state = MENU_SCREEN
@@ -64,7 +64,6 @@ while running:
     elif game_state == GAME_SCREEN:
         game.update(defines.FPS)  # Update game logic
         game.render(screen)  # Render the game elements with the camera
-        player.update(defines.FPS, player.position)
 
     # Update the display
     pygame.display.flip()

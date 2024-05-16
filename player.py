@@ -66,6 +66,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.x, self.rect.y = player_position
 
     def draw(self, screen, camera):
+
         # If invincible, flash white
         if self.invincible:
             if int(time.time() * 10) % 2 == 0:  # Toggle every 0.1 second for flashing effect
