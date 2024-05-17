@@ -15,6 +15,7 @@ GAME_SCREEN = 2
 pygame.init()
 screen = pygame.display.set_mode(defines.resolution)
 pygame.display.set_caption(defines.GAME_NAME)
+#pygame.display.set_icon(images/goblin_logo.png)
 clock = pygame.time.Clock()
 
 # Game state and main loop flag
