@@ -8,7 +8,7 @@ import defines
 
 class MainMenu:
     def __init__(self):
-        self.font = defines.GENERAL_FONT
+        self.font = defines.MENU_FONT
         self.options = ["Start Game", "Settings", "Quit"]
         self.selected_option = 0
 
@@ -43,5 +43,5 @@ class MainMenu:
         for i, option in enumerate(self.options):
             color = (defines.white) if i == self.selected_option else (defines.green)
             text = self.font.render(option, True, color)
-            text_rect = text.get_rect(center=(1500, 300 + i * 50))
+            text_rect = text.get_rect(center=(1350, 400 + i * 75))
             screen.blit(text, text_rect)
