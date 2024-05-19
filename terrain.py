@@ -1,35 +1,44 @@
-import defines
-from enum import Enum
+from defines import *
 
 
-# Define different tile types
-class TileType(Enum):
+class TileType:
     GROUND = 0
-    WATER = 1
-    TREE = 2
-    WALL = 3
+    GRASS = 1
+    WATER = 2
+    TREE = 3
+    WALL = 4
 
-
-# Define tile properties such as colors, speed modifiers, and walkable status
+# Define terrain properties as a dictionary
 TILE_PROPERTIES = {
     TileType.GROUND: {
-        "color": defines.brown,  # Brown
-        "speed_modifier": 1.0,  # Normal speed
+        "color": brown,
         "walkable": True,
+        "speed_modifier": 1.0,  # No movement penalty
+        #"image": pygame.image.load("assets/dirt.png").convert_alpha(),  # Load image
+    },
+    TileType.GRASS: {
+        "color": green,
+        "walkable": True,
+        "speed_modifier": 1.0,  # No movement penalty
+        #"image": pygame.image.load("grass_tile.png").convert_alpha(),  # Load image
     },
     TileType.WATER: {
-        "color": defines.blue,  # Blue
-        "speed_modifier": 0.5,  # Half speed
+        "color": blue,
         "walkable": True,
+        "speed_modifier": 0.5,  # Movement penalty in water
+        #"image": pygame.image.load("assets/water.png").convert_alpha(),  # Load image
     },
     TileType.TREE: {
-        "color": defines.green,  # Green
-        "speed_modifier": 0.0,  # Not walkable
-        "walkable": False,
+        "color": lime,
+        "walkable": True,  # Trees are walkable but block vision
+        "speed_modifier": 0.75,  # Movement penalty in forest
+        "blocks_vision": True,  # Add a property for vision blocking
+        #"image": pygame.image.load("assets/tree.png").convert_alpha(),  # Load image
     },
     TileType.WALL: {
-        "color": defines.gray,  # Gray
-        "speed_modifier": 0.0,  # Not walkable
+        "color": gray,
         "walkable": False,
+        "speed_modifier": 1.0,  # No movement penalty
+        #"image": pygame.image.load("wall_tile.png").convert_alpha(),  # Load image
     },
 }
