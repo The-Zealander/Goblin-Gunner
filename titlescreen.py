@@ -29,7 +29,7 @@ class TitleScreen:
 
         # Instruction text setup
         self.font_instructions = defines.SMALL_FONT
-        self.instruction_text = self.font_instructions.render("Press Enter to Start", True, defines.white)
+        self.instruction_text = self.font_instructions.render("Press [SPACE] to Start", True, defines.white)
         self.instruction_text_rect = self.instruction_text.get_rect(
             center=(defines.resolution[0] / 2, defines.resolution[1] - 100))  # Positioned near the bottom
 
@@ -67,7 +67,7 @@ class TitleScreen:
             if event.type == pygame.QUIT:
                 return "quit"
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:
+                if event.key == pygame.K_SPACE:
                     return "main_menu"  # Transition to main menu
         return None
 

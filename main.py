@@ -34,8 +34,8 @@ while running:
             running = False  # Exit the game when the quit event is triggered
 
         if game_state == TITLE_SCREEN:
-            # Transition to menu if a specific key is pressed, like SPACE
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+            # Transition to menu if a specific key is pressed.
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 game_state = MENU_SCREEN
 
         elif game_state == MENU_SCREEN:
