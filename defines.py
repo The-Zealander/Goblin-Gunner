@@ -7,17 +7,23 @@ pygame.init()
 resolution = (1920, 1080)
 FPS = 60
 
+# Font shit
+# Font types
+pixelfont = 'fonts/Pixelfy.ttf'
 # Define fonts
-TITLE_FONT = pygame.font.SysFont("Arial", 90)  # Font for titles
-GENERAL_FONT = pygame.font.SysFont("Arial", 50)  # General font
-SMALL_FONT = pygame.font.SysFont("Arial", 25)  # Smaller font
-VERSION_FONT = pygame.font.SysFont("Arial", 12)  # Font for version info
+TITLE_FONT = pygame.font.Font(pixelfont, 100)  # Font for titles
+MENU_FONT = pygame.font.Font(pixelfont, 75)  # Font for titles
+GENERAL_FONT = pygame.font.Font(pixelfont, 50)  # General font
+SMALL_FONT = pygame.font.Font(pixelfont, 25)  # Smaller font
+VERSION_FONT = pygame.font.Font(pixelfont, 12)  # Font for version info
 
 # Game name
 GAME_NAME = "Goblin Gunner"
+icon = pygame.image.load('images/goblin_logo.png')
 
 # Sounds
-BUTTON_CLICK_SOUND = "sounds/Button_sound.mp3"  # Path to button click sound file
+BUTTON_CLICK_SOUND = "sounds/Button_sound.mp3"
+Jens_Song = "sounds/Jens the Goblin.mp3"
 
 
 # Define program version and state

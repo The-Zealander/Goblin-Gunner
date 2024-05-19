@@ -23,12 +23,12 @@ class TitleScreen:
 
         # Title text setup
         self.font_title = defines.TITLE_FONT
-        self.title_text = self.font_title.render("GOBLIN GUNNER", True, defines.green)
+        self.title_text = self.font_title.render("GOBLIN     GUNNER", True, defines.lime)
         self.title_text_rect = self.title_text.get_rect(
             center=(defines.resolution[0] / 2, 100))  # Positioned at top-center
 
         # Instruction text setup
-        self.font_instructions = defines.SMALL_FONT
+        self.font_instructions = defines.GENERAL_FONT
         self.instruction_text = self.font_instructions.render("Press [SPACE] to Start", True, defines.white)
         self.instruction_text_rect = self.instruction_text.get_rect(
             center=(defines.resolution[0] / 2, defines.resolution[1] - 100))  # Positioned near the bottom
@@ -60,16 +60,6 @@ class TitleScreen:
 
             # Adjust for the next line
             start_y -= text_rect.height + 5  # Adjust spacing
-
-    def handle_events(self, events):
-        # Handle events like quitting or switching scenes
-        for event in events:
-            if event.type == pygame.QUIT:
-                return "quit"
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    return "main_menu"  # Transition to main menu
-        return None
 
     def update(self):
         # No specific updates required for this static title screen

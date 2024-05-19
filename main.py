@@ -1,7 +1,6 @@
 import pygame
 import sys
 import defines
-from player import Player
 from the_game import Game  # The class that contains the game logic
 from titlescreen import TitleScreen  # The title screen
 from start_menu import MainMenu  # The menu screen
@@ -15,7 +14,7 @@ GAME_SCREEN = 2
 pygame.init()
 screen = pygame.display.set_mode(defines.resolution)
 pygame.display.set_caption(defines.GAME_NAME)
-#pygame.display.set_icon(images/goblin_logo.png)
+pygame.display.set_icon(defines.icon)
 clock = pygame.time.Clock()
 
 # Game state and main loop flag
@@ -27,6 +26,9 @@ title_screen = TitleScreen()  # Assuming TitleScreen has a render method
 menu = MainMenu()  # Assuming Menu has a render method
 game = Game()  # This is your game class with the camera system
 
+pygame.mixer.music.load(defines.Jens_Song) # Start the song jackass.
+pygame.mixer.music.set_volume(0.7)  # Adjust volume
+pygame.mixer.music.play(-1)  # Play in a loop
 # Main game loop
 while running:
     for event in pygame.event.get():
