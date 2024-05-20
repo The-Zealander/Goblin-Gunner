@@ -7,6 +7,13 @@ from camera import Camera
 from defines import *
 from terrain import TileType
 
+# music
+pygame.mixer.music.load(background_song)  # Start the song jackass.
+pygame.mixer.music.set_volume(0.5)  # Adjust volume
+pygame.mixer.music.play(-1)  # Play in a loop
+
+# sound effects
+shotguncock = pygame.mixer.Sound(Shotguncoking_sound)
 # Constants
 SCREEN_WIDTH = 1920
 SCREEN_HEIGHT = 1080
@@ -23,6 +30,8 @@ player = Player((map_width * map_tile_size) // 2, (map_height * map_tile_size) /
 enemies = [Enemy(100, 100), Enemy(200, 200)]
 camera = Camera(SCREEN_WIDTH, SCREEN_HEIGHT)
 bullets = []
+
+
 
 # Main game loop
 running = True
@@ -54,6 +63,7 @@ while running:
 
     # Handle shooting
     if keys[pygame.K_SPACE]:
+        shotguncock.play()
         new_bullets = player.shoot()
         if new_bullets:
             bullets.extend(new_bullets)

@@ -65,6 +65,9 @@ while running:
         menu.render(screen)  # Render the menu
 
     #elif game_state == GAME_SCREEN:
+        pygame.mixer.music.load(defines.background_song)  # Start the song jackass.
+        pygame.mixer.music.set_volume(0.5)  # Adjust volume
+        pygame.mixer.music.play(-1)  # Play in a loop
         #game.update(defines.FPS)  # Update game logic
         #game.render(screen)  # Render the game elements with the camera
 

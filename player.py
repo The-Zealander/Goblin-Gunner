@@ -86,7 +86,6 @@ class Player:
             self.last_shot_time = now
             self.ammo -= 1
             bullets = []
-            defines.Shotguncoking_sound()
             for _ in range(5):
                 angle_offset = random.uniform(-10, 10)  # Random offset between -5 and 5 degrees
                 angle = math.atan2(self.direction.y, self.direction.x) + math.radians(angle_offset)
