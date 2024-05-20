@@ -1,15 +1,16 @@
 import pygame
 from itertools import cycle
-from terrain import TILE_PROPERTIES, TileType
-
-P_HP = 100
+import math
+import defines
+from utilities import Bullet
+import random
 
 
 def load_frames(frame_names):
     frames = []
     for name in frame_names:
         try:
-            image = pygame.image.load(f"Goblin_sprites_walking/player_walking/{name}").convert_alpha()
+            image = pygame.image.load(f"sprites/player_walking/{name}").convert_alpha()
             frames.append(image)
         except pygame.error as e:
             print(f"Error loading {name}: {e}")
@@ -27,6 +28,7 @@ class Direction:
 class Player:
     def __init__(self, x, y):
         self.rect = pygame.Rect(x, y, 32, 32)
+        self.speed = 200  # Speed in pixels per second
 
         down_frames = load_frames(["goblin_walk_down_{}.png".format(i) for i in range(1, 7)])
         up_frames = load_frames(["goblin_walk_up_{}.png".format(i) for i in range(1, 7)])
@@ -43,40 +45,55 @@ class Player:
         self.current_animation = Direction.DOWN
         self.current_cycle = self.animations[self.current_animation]
         self.current_frame = next(self.current_cycle)
-        self.animation_speed = 0.09
+        self.animation_speed = 0.5
         self.last_frame_time = 0
+        self.direction = pygame.Vector2(0, 0)
+        self.last_shot_time = 0
+        self.shot_cooldown = 500  # milliseconds
+        self.ammo = 10
+        self.max_ammo = 10
+        self.health = 100
+        self.max_health = 100
 
-    def move(self, direction, dt, game_map):
-        if direction != self.current_animation:
-            self.current_animation = direction
-            self.current_cycle = self.animations[direction]
+    def update(self, keys, dt):
+        self.direction = pygame.Vector2(0, 0)
+        if keys[pygame.K_w]:
+            self.direction.y = -1
+            self.current_animation = Direction.UP
+        if keys[pygame.K_s]:
+            self.direction.y = 1
+            self.current_animation = Direction.DOWN
+        if keys[pygame.K_a]:
+            self.direction.x = -1
+            self.current_animation = Direction.LEFT
+        if keys[pygame.K_d]:
+            self.direction.x = 1
+            self.current_animation = Direction.RIGHT
+
+        if self.direction.length() > 0:
+            self.direction = self.direction.normalize()  # Normalize the vector to ensure consistent speed
+            self.rect.x += self.direction.x * self.speed * dt
+            self.rect.y += self.direction.y * self.speed * dt
+
+        now = pygame.time.get_ticks()
+        if now - self.last_frame_time > self.animation_speed * 1000:
             self.current_frame = next(self.current_cycle)
+            self.last_frame_time = now
 
-        self.last_frame_time += dt
-        if self.last_frame_time >= self.animation_speed:
-            self.current_frame = next(self.current_cycle)
-            self.last_frame_time = 0
-
-        dx, dy = 0, 0
-        if direction == Direction.LEFT:
-            dx = -5
-        elif direction == Direction.RIGHT:
-            dx = 5
-        elif direction == Direction.UP:
-            dy = -5
-        elif direction == Direction.DOWN:
-            dy = 5
-
-        next_rect = self.rect.move(dx, dy)
-        tile_x, tile_y = next_rect.x // game_map.tile_size, next_rect.y // game_map.tile_size
-
-        if game_map.is_walkable(tile_x, tile_y):
-            speed_modifier = TILE_PROPERTIES[game_map.tiles[tile_y][tile_x]]["speed_modifier"]
-            self.rect.x += dx * speed_modifier
-            self.rect.y += dy * speed_modifier
+    def shoot(self):
+        now = pygame.time.get_ticks()
+        if now - self.last_shot_time > self.shot_cooldown and self.ammo > 0:
+            self.last_shot_time = now
+            self.ammo -= 1
+            bullets = []
+            defines.Shotguncoking_sound()
+            for _ in range(5):
+                angle_offset = random.uniform(-10, 10)  # Random offset between -5 and 5 degrees
+                angle = math.atan2(self.direction.y, self.direction.x) + math.radians(angle_offset)
+                bullet = Bullet(self.rect.centerx, self.rect.centery, angle)
+                bullets.append(bullet)
+            return bullets
+        return None
 
     def draw(self, screen, camera):
-        screen.blit(self.current_frame, (self.rect.x - camera.offset_x, self.rect.y - camera.offset_y))
-
-    def update(self):
-        pass
+        screen.blit(self.current_frame, camera.apply(self))

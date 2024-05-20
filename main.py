@@ -1,7 +1,7 @@
 import pygame
 import sys
 import defines
-from game import Game  # The class that contains the game logic
+#from game import Game  # The class that contains the game logic
 from titlescreen import TitleScreen  # The title screen
 from start_menu import MainMenu  # The menu screen
 
@@ -24,11 +24,11 @@ running = True
 # Create instances of different screens and game components
 title_screen = TitleScreen()  # Assuming TitleScreen has a render method
 menu = MainMenu()  # Assuming Menu has a render method
-game = Game()  # This is your game class with the camera system
+#game = Game()  # This is your game class with the camera system
 
 pygame.mixer.music.load(defines.Jens_Song)  # Start the song jackass.
 pygame.mixer.music.set_volume(0.7)  # Adjust volume
-pygame.mixer.music.play(-1)  # Play in a loop
+pygame.mixer.music.play(1)  # Play in a loop
 # Main game loop
 while running:
     for event in pygame.event.get():
@@ -52,7 +52,7 @@ while running:
 
 
         elif game_state == GAME_SCREEN:
-            game.handle_events()  # Pass events to the game
+            #game.handle_events()  # Pass events to the game
             # Return to menu with ESC
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 game_state = MENU_SCREEN
@@ -64,9 +64,9 @@ while running:
     elif game_state == MENU_SCREEN:
         menu.render(screen)  # Render the menu
 
-    elif game_state == GAME_SCREEN:
-        game.update(defines.FPS)  # Update game logic
-        game.render(screen)  # Render the game elements with the camera
+    #elif game_state == GAME_SCREEN:
+        #game.update(defines.FPS)  # Update game logic
+        #game.render(screen)  # Render the game elements with the camera
 
     # Update the display
     pygame.display.flip()

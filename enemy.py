@@ -1,35 +1,24 @@
 import pygame
-import random
 
-import defines
-import map
+ENEMY_SPEED = 2
+ENEMY_HEALTH = 100
 
 class Enemy:
-    def __init__(self, x, y, size):
-        self.x = x
-        self.y = y
-        self.size = defines.small_enemey_size
-        self.color = (255, 0, 0)  # Red color
-        self.rect = pygame.Rect(x, y, size, size)
-        self.speed = 1  # Adjust speed as needed
+    def __init__(self, x, y):
+        self.rect = pygame.Rect(x, y, 32, 32)
+        self.speed = ENEMY_SPEED
+        self.health = ENEMY_HEALTH
 
-    def draw(self, screen, camera):
-        pygame.draw.rect(screen, self.color, (self.rect.x - camera.offset_x, self.rect.y - camera.offset_y, self.size, self.size))
+    def update(self, player_rect):
+        dx = player_rect.centerx - self.rect.centerx
+        dy = player_rect.centery - self.rect.centery
+        distance = max(1, abs(dx) + abs(dy))
+        dx /= distance
+        dy /= distance
+        self.rect.x += dx * self.speed
+        self.rect.y += dy * self.speed
 
-    def update(self, dt, player_pos):
-        # Randomly choose a direction to move
-        direction = random.choice(["up", "down", "left", "right"])
-
-        # Update enemy position based on the chosen direction
-        if direction == "up":
-            self.rect.y -= self.speed
-        elif direction == "down":
-            self.rect.y += self.speed
-        elif direction == "left":
-            self.rect.x -= self.speed
-        elif direction == "right":
-            self.rect.x += self.speed
-
-        # Ensure enemy stays within map boundaries
-        self.rect.x = max(0, min(self.rect.x, defines.map_width - self.size))
-        self.rect.y = max(0, min(self.rect.y, defines.map_height - self.size))
+    def take_damage(self, damage):
+        self.health -= damage
+        if self.health <= 0:
+            self.health = 0

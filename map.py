@@ -1,45 +1,59 @@
 import pygame
 from terrain import TILE_PROPERTIES, TileType
-
+from defines import map_width, map_height, map_tile_size
 
 class GameMap:
-    def __init__(self, width, height, tile_size):
-        self.width = width
-        self.height = height
-        self.tile_size = tile_size
-        self.tiles = [[TileType.GROUND for _ in range(width)] for _ in range(height)]
-        self.add_borders()
+    def __init__(self):
+        self.width = map_width
+        self.height = map_height
+        self.tile_size = map_tile_size
+        self.tiles = self.generate_map()
 
-    def add_borders(self):
-        for col in range(self.width):
-            self.tiles[0][col] = TileType.WALL
-            self.tiles[self.height - 1][col] = TileType.WALL
-        for row in range(self.height):
-            self.tiles[row][0] = TileType.WALL
-            self.tiles[row][self.width - 1] = TileType.WALL
+    def generate_map(self):
+        tiles = [[TileType.GROUND for _ in range(self.width)] for _ in range(self.height)]
 
-    def is_walkable(self, tile_x, tile_y):
-        if 0 <= tile_x < self.width and 0 <= tile_y < self.height:
-            return TILE_PROPERTIES[self.tiles[tile_y][tile_x]]["walkable"]
-        return False
+        # Add walls around the edges
+        for y in range(self.height):
+            for x in range(self.width):
+                if x == 0 or x == self.width - 1 or y == 0 or y == self.height - 1:
+                    tiles[y][x] = TileType.WALL
+
+        # Predefined tile locations
+        grass_locations = [(5, 5), (5, 6), (5, 7)]
+        water_locations = [(10, 10), (10, 11), (10, 12)]
+        tree_locations = [(15, 15), (15, 16), (15, 17)]
+
+        # Place grass tiles
+        for x, y in grass_locations:
+            tiles[y][x] = TileType.GRASS
+
+        # Place water tiles
+        for x, y in water_locations:
+            tiles[y][x] = TileType.WATER
+
+        # Place tree tiles
+        for x, y in tree_locations:
+            tiles[y][x] = TileType.TREE
+
+        return tiles
+
+    def place_tile(self, x, y, tile_type):
+        if 0 <= x < self.width and 0 <= y < self.height:
+            self.tiles[y][x] = tile_type
 
     def draw(self, screen, camera):
-        start_col = max(0, camera.offset_x // self.tile_size)
-        end_col = min(self.width, (camera.offset_x + screen.get_width()) // self.tile_size + 1)
-        start_row = max(0, camera.offset_y // self.tile_size)
-        end_row = min(self.height, (camera.offset_y + screen.get_height()) // self.tile_size + 1)
+        start_x = max(0, camera.rect.left // self.tile_size)
+        start_y = max(0, camera.rect.top // self.tile_size)
+        end_x = min(self.width, (camera.rect.right + self.tile_size - 1) // self.tile_size)
+        end_y = min(self.height, (camera.rect.bottom + self.tile_size - 1) // self.tile_size)
 
-        for row in range(start_row, end_row):
-            for col in range(start_col, end_col):
-                tile_type = self.tiles[row][col]
-                color = TILE_PROPERTIES[tile_type]["color"]
-                pygame.draw.rect(
-                    screen,
-                    color,
-                    (
-                        col * self.tile_size - camera.offset_x,
-                        row * self.tile_size - camera.offset_y,
-                        self.tile_size,
-                        self.tile_size,
-                    ),
+        for y in range(start_y, end_y):
+            for x in range(start_x, end_x):
+                tile = self.tiles[y][x]
+                tile_prop = TILE_PROPERTIES[tile]
+                rect = pygame.Rect(
+                    x * self.tile_size - camera.rect.left,
+                    y * self.tile_size - camera.rect.top,
+                    self.tile_size, self.tile_size
                 )
+                pygame.draw.rect(screen, tile_prop["color"], rect)

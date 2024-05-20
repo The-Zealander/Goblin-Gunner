@@ -23,6 +23,7 @@ icon = pygame.image.load('images/goblin_logo.png')
 
 # Sounds
 BUTTON_CLICK_SOUND = "sounds/Button_sound.mp3"
+Shotguncoking_sound = "sounds/shotgun-cocking.mp3"
 Jens_Song = "sounds/Jens the Goblin.mp3"
 
 

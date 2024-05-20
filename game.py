@@ -1,52 +1,79 @@
 import pygame
-import defines
-from map import GameMap
 from player import Player
 from enemy import Enemy
-import random
+from utilities import Bullet
+from map import GameMap
+from camera import Camera
+from defines import *
+from terrain import TileType
 
+# Constants
+SCREEN_WIDTH = 1920
+SCREEN_HEIGHT = 1080
+BULLET_DAMAGE = 10
 
-class Camera:
-    def __init__(self, width, height):
-        self.rect = pygame.Rect(0, 0, width, height)
-        self.offset_x = 0
-        self.offset_y = 0
+# Initialize Pygame
+pygame.init()
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+clock = pygame.time.Clock()
 
-    def apply(self, entity):
-        return entity.rect.move(self.offset_x, self.offset_y)
+# Create game objects
+game_map = GameMap()
+player = Player((map_width * map_tile_size) // 2, (map_height * map_tile_size) // 2)
+enemies = [Enemy(100, 100), Enemy(200, 200)]
+camera = Camera(SCREEN_WIDTH, SCREEN_HEIGHT)
+bullets = []
 
-    def update(self, target):
-        self.rect = target.rect
-        self.offset_x = -self.rect.centerx + int(self.rect.width / 2)
-        self.offset_y = -self.rect.centery + int(self.rect.height / 2)
+# Main game loop
+running = True
+while running:
+    screen.fill((0, 0, 0))
+    dt = clock.tick(60) / 1000.0  # Amount of seconds between each loop
 
+    keys = pygame.key.get_pressed()
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_1:
+                selected_tile_type = TileType.GRASS
+            elif event.key == pygame.K_2:
+                selected_tile_type = TileType.WATER
+            elif event.key == pygame.K_3:
+                selected_tile_type = TileType.TREE
+            elif event.key == pygame.K_4:
+                selected_tile_type = TileType.WALL
 
-class Game:
-    def __init__(self):
-        self.map = GameMap(30, 20, 32)
-        self.player = Player(100, 100)
-        self.enemies = [Enemy(random.randint(0, defines.map_width), random.randint(0, defines.map_height), 32) for _ in range(5)]  # Create 5 enemies
-        self.camera = Camera(800, 600)
+    # Update game objects
+    player.update(keys, dt)
+    for bullet in bullets:
+        bullet.update(dt)
+    for enemy in enemies:
+        enemy.update(player.rect)
+    camera.update(player)
 
-    def handle_events(self):
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
-            self.player.move("left", pygame.time.get_ticks(), self.map)
-        if keys[pygame.K_RIGHT]:
-            self.player.move("right", pygame.time.get_ticks(), self.map)
-        if keys[pygame.K_UP]:
-            self.player.move("up", pygame.time.get_ticks(), self.map)
-        if keys[pygame.K_DOWN]:
-            self.player.move("down", pygame.time.get_ticks(), self.map)
+    # Handle shooting
+    if keys[pygame.K_SPACE]:
+        new_bullets = player.shoot()
+        if new_bullets:
+            bullets.extend(new_bullets)
 
-    def update(self, fps):
-        self.player.update()
-        for enemy in self.enemies:
-            enemy.update(fps, (self.player.rect.x, self.player.rect.y))  # Pass delta time and player position
-        self.camera.update(self.player)
+    # Check collisions
+    for bullet in bullets:
+        for enemy in enemies:
+            if bullet.rect.colliderect(enemy.rect):
+                enemy.take_damage(BULLET_DAMAGE)
+                bullets.remove(bullet)
+                break
 
-    def render(self, screen):
-        self.map.draw(screen, self.camera)
-        self.player.draw(screen, self.camera)
-        for enemy in self.enemies:
-            enemy.draw(screen, self.camera)
+    # Draw everything
+    game_map.draw(screen, camera)
+    for enemy in enemies:
+        pygame.draw.rect(screen, (255, 0, 0), camera.apply(enemy))
+    for bullet in bullets:
+        pygame.draw.rect(screen, (255, 255, 255), camera.apply(bullet))
+    player.draw(screen, camera)
+
+    pygame.display.flip()
+
+pygame.quit()

@@ -1,8 +1,5 @@
-# start_menu.py
-
 import pygame
 import moviepy.editor as mpy
-
 import defines
 
 
