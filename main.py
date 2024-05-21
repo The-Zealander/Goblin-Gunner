@@ -5,11 +5,13 @@ from player import Player
 from game import Game  # The class that contains the game logic
 from titlescreen import TitleScreen  # The title screen
 from start_menu import MainMenu  # The menu screen
+from controls import ControlScreen
 
 # Game States
 TITLE_SCREEN = 0
 MENU_SCREEN = 1
 GAME_SCREEN = 2
+CONTROLS_SCREEN = 3
 
 # Initialize pygame and set up the display
 pygame.init()
@@ -25,6 +27,7 @@ running = True
 title_screen = TitleScreen()  # Assuming TitleScreen has a render method
 menu = MainMenu()  # Assuming Menu has a render method
 game = Game()  # This is your game class with the camera system
+controls_screen = ControlScreen()  # Create an instance of the ControlsScreen
 
 # Main game loop
 while running:
@@ -46,7 +49,12 @@ while running:
             elif action == "start_game":
                 game_state = GAME_SCREEN
             elif action == "open_controls":
-                print("ingenting")
+                game_state = CONTROLS_SCREEN
+
+        elif game_state == CONTROLS_SCREEN:
+            action = controls_screen.handle_event(event)
+            if action == "back":
+                game_state = MENU_SCREEN
 
 
         elif game_state == GAME_SCREEN:
@@ -61,6 +69,9 @@ while running:
 
     elif game_state == MENU_SCREEN:
         menu.render(screen)  # Render the menu
+
+    elif game_state == CONTROLS_SCREEN:
+        controls_screen.render(screen)
 
     elif game_state == GAME_SCREEN:
         game.handle_events(keys)  # Pass events to the game
