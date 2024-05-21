@@ -43,15 +43,6 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_1:
-                selected_tile_type = TileType.GRASS
-            elif event.key == pygame.K_2:
-                selected_tile_type = TileType.WATER
-            elif event.key == pygame.K_3:
-                selected_tile_type = TileType.TREE
-            elif event.key == pygame.K_4:
-                selected_tile_type = TileType.WALL
 
     # Update game objects
     player.update(keys, dt)
