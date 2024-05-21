@@ -45,7 +45,7 @@ while running:
                 running = False
             elif action == "start_game":
                 game_state = GAME_SCREEN
-            elif action == "open_settings":
+            elif action == "open_controls":
                 print("ingenting")
 
 

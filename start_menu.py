@@ -6,7 +6,7 @@ import defines
 class MainMenu:
     def __init__(self):
         self.font = defines.MENU_FONT
-        self.options = ["Start Game", "Settings", "Quit"]
+        self.options = ["START", "CONTROLS", "QUIT"]
         self.selected_option = 0
 
         # Load and prepare video
@@ -21,11 +21,11 @@ class MainMenu:
             elif event.key == pygame.K_s:
                 self.selected_option = (self.selected_option + 1) % len(self.options)
             elif event.key == pygame.K_RETURN:
-                if self.options[self.selected_option] == "Start Game":
+                if self.options[self.selected_option] == "START":
                     return "start_game"
-                elif self.options[self.selected_option] == "Settings":
-                    return "open_settings"
-                elif self.options[self.selected_option] == "Quit":
+                elif self.options[self.selected_option] == "CONTROLS":
+                    return "open_controls"
+                elif self.options[self.selected_option] == "QUIT":
                     return "quit"
         return None
 
@@ -42,5 +42,5 @@ class MainMenu:
         for i, option in enumerate(self.options):
             color = (defines.white) if i == self.selected_option else (defines.green)
             text = self.font.render(option, True, color)
-            text_rect = text.get_rect(center=(1350, 400 + i * 75))
+            text_rect = text.get_rect(center=(1350, 380 + i * 100))
             screen.blit(text, text_rect)
