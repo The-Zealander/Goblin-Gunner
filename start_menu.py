@@ -20,7 +20,7 @@ class MainMenu:
                 self.selected_option = (self.selected_option - 1) % len(self.options)
             elif event.key == pygame.K_s:
                 self.selected_option = (self.selected_option + 1) % len(self.options)
-            elif event.key == pygame.K_SPACE    :
+            elif event.key == pygame.K_RETURN:
                 if self.options[self.selected_option] == "Start Game":
                     return "start_game"
                 elif self.options[self.selected_option] == "Settings":
@@ -30,6 +30,8 @@ class MainMenu:
         return None
 
     def render(self, screen):
+        # Fill the screen with black to avoid artifacts
+        screen.fill("BLACK")
         # Play the video
         t = (pygame.time.get_ticks() / 1000.0) % self.video.duration
         frame = self.video.get_frame(t)

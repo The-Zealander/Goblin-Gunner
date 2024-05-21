@@ -29,7 +29,7 @@ class TitleScreen:
 
         # Instruction text setup
         self.font_instructions = defines.GENERAL_FONT
-        self.instruction_text = self.font_instructions.render("Press [SPACE] to Start", True, defines.white)
+        self.instruction_text = self.font_instructions.render("Press [ENTER] to Start", True, defines.white)
         self.instruction_text_rect = self.instruction_text.get_rect(
             center=(defines.resolution[0] / 2, defines.resolution[1] - 100))  # Positioned near the bottom
 

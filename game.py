@@ -5,76 +5,43 @@ from utilities import Bullet
 from map import GameMap
 from camera import Camera
 from defines import *
-from terrain import TileType
-
-# music
-pygame.mixer.music.load(background_song)  # Start the song jackass.
-pygame.mixer.music.set_volume(0.5)  # Adjust volume
-pygame.mixer.music.play(-1)  # Play in a loop
-
-# sound effects
 shotguncock = pygame.mixer.Sound(Shotguncoking_sound)
-# Constants
-SCREEN_WIDTH = 1920
-SCREEN_HEIGHT = 1080
-BULLET_DAMAGE = 10
 
-# Initialize Pygame
-pygame.init()
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-clock = pygame.time.Clock()
+SCREEN_WIDTH = resolution[0]
+SCREEN_HEIGHT = resolution[1]
+class Game:
+    def __init__(self):
+        # Initialize game objects
+        self.game_map = GameMap()
+        self.player = Player((map_width * map_tile_size) // 2, (map_height * map_tile_size) // 2)
+        self.enemies = [Enemy(100, 100), Enemy(200, 200)]
+        self.camera = Camera(SCREEN_WIDTH, SCREEN_HEIGHT)
+        self.bullets = []
 
-# Create game objects
-game_map = GameMap()
-player = Player((map_width * map_tile_size) // 2, (map_height * map_tile_size) // 2)
-enemies = [Enemy(100, 100), Enemy(200, 200)]
-camera = Camera(SCREEN_WIDTH, SCREEN_HEIGHT)
-bullets = []
+    def update(self, dt, keys):
+        # Update game logic
+        self.player.update(keys, dt)
+        for bullet in self.bullets:
+            bullet.update(dt)
+        for enemy in self.enemies:
+            enemy.update(self.player.rect)
+        self.camera.update(self.player)
 
+    def render(self, screen):
+        # Fill the screen with black to avoid artifacts
+        screen.fill("BLACK")
 
+        self.game_map.draw(screen, self.camera)
+        for enemy in self.enemies:
+            pygame.draw.rect(screen, (255, 0, 0), self.camera.apply(enemy))
+        for bullet in self.bullets:
+            pygame.draw.rect(screen, (255, 255, 255), self.camera.apply(bullet))
+        self.player.draw(screen, self.camera)
 
-# Main game loop
-running = True
-while running:
-    screen.fill((0, 0, 0))
-    dt = clock.tick(60) / 1000.0  # Amount of seconds between each loop
-
-    keys = pygame.key.get_pressed()
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-    # Update game objects
-    player.update(keys, dt)
-    for bullet in bullets:
-        bullet.update(dt)
-    for enemy in enemies:
-        enemy.update(player.rect)
-    camera.update(player)
-
-    # Handle shooting
-    if keys[pygame.K_SPACE]:
-        shotguncock.play()
-        new_bullets = player.shoot()
-        if new_bullets:
-            bullets.extend(new_bullets)
-
-    # Check collisions
-    for bullet in bullets:
-        for enemy in enemies:
-            if bullet.rect.colliderect(enemy.rect):
-                enemy.take_damage(BULLET_DAMAGE)
-                bullets.remove(bullet)
-                break
-
-    # Draw everything
-    game_map.draw(screen, camera)
-    for enemy in enemies:
-        pygame.draw.rect(screen, (255, 0, 0), camera.apply(enemy))
-    for bullet in bullets:
-        pygame.draw.rect(screen, (255, 255, 255), camera.apply(bullet))
-    player.draw(screen, camera)
-
-    pygame.display.flip()
-
-pygame.quit()
+    def handle_events(self, keys):
+        # Handle shooting
+        if keys[pygame.K_SPACE]:
+            shotguncock.play()
+            new_bullets = self.player.shoot()
+            if new_bullets:
+                self.bullets.extend(new_bullets)

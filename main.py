@@ -31,7 +31,8 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False  # Exit the game when the quit event is triggered
-
+        dt = clock.tick(60) / 1000.0  # Amount of seconds between each loop
+        keys = pygame.key.get_pressed()
         if game_state == TITLE_SCREEN:
             # Transition to menu if a specific key is pressed, like SPACE
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
@@ -49,12 +50,12 @@ while running:
 
 
         elif game_state == GAME_SCREEN:
-            game.handle_events()  # Pass events to the game
+            game.handle_events(keys)  # Pass events to the game
             # Return to menu with ESC
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 game_state = MENU_SCREEN
 
-    # Rendering and updating based on the game state
+    # Rendering and updating based on the gamkeys = pygame.key.get_pressed()e state
     if game_state == TITLE_SCREEN:
         title_screen.render(screen)  # Render the title screen
 
@@ -62,7 +63,8 @@ while running:
         menu.render(screen)  # Render the menu
 
     elif game_state == GAME_SCREEN:
-        game.update(defines.FPS)  # Update game logic
+        game.handle_events(keys)  # Pass events to the game
+        game.update(dt, keys)  # Update game logic
         game.render(screen)  # Render the game elements with the camera
 
     # Update the display
