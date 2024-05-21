@@ -28,10 +28,10 @@ game = Game()  # This is your game class with the camera system
 
 # Main game loop
 while running:
+    dt = clock.tick(60) / 1000.0  # Amount of seconds between each loop
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False  # Exit the game when the quit event is triggered
-        dt = clock.tick(60) / 1000.0  # Amount of seconds between each loop
         keys = pygame.key.get_pressed()
         if game_state == TITLE_SCREEN:
             # Transition to menu if a specific key is pressed, like SPACE

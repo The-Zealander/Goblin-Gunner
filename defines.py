@@ -32,10 +32,10 @@ Jens_Song = "sounds/Jens the Goblin.mp3"
 # Define program version and state
 def get_version_info():
     program_state = "Alpha"
-    program_version = "0.6"
-    menu_version = "1"
+    program_version = "1"
+    menu_version = "1.1"
     settings_version = "0.0"
-    gameplay_version = "0.3"
+    gameplay_version = "0.5"
     title_version = "1.5"
     return {
         "program_state": program_state,
