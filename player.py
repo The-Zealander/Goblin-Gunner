@@ -2,11 +2,10 @@ import pygame
 from itertools import cycle
 import math
 import random
-
 import defines
 from utilities import Bullet
 
-
+shotguncock = pygame.mixer.Sound(defines.Shotguncoking_sound)
 def load_frames(frame_names):
     frames = []
     for name in frame_names:
@@ -29,16 +28,17 @@ class Direction:
 class Player:
     def __init__(self, x, y):
         self.rect = pygame.Rect(x, y, 32, 32)
-        self.base_speed = 500  # Speed in pixels per second
-        self.sprint_multiplier = 10
+        self.base_speed = 100  # Speed in pixels per second
+        self.sprint_multiplier = 2
         self.speed = self.base_speed
-        #stamina
+        # stamina
         self.max_stamina = 100
         self.stamina = self.max_stamina
         self.stamina_regen_moving = 5
         self.stamina_regen_standing = 25
         self.stamina_sprint_cost = 10
         self.is_sprinting = False
+        self.shoot_sound = pygame.mixer.Sound("sounds/gunshot.mp3")
 
         down_frames = load_frames(["goblin_walk_down_{}.png".format(i) for i in range(1, 7)])
         up_frames = load_frames(["goblin_walk_up_{}.png".format(i) for i in range(1, 7)])
@@ -59,7 +59,7 @@ class Player:
         self.last_frame_time = 0
         self.direction = pygame.Vector2(0, 0)
 
-        #gun shit
+        # gun shit
         self.last_shot_time = 0
         self.shot_cooldown = 500  # milliseconds
         self.max_shots = 2
@@ -68,7 +68,7 @@ class Player:
         self.reload_time_per_bullet = 1000  # milliseconds (1 second)
         self.reloading = False
         self.reload_start_time = 0
-        #health shit
+        # health shit
         self.health = 100
         self.max_health = 100
 
@@ -149,6 +149,7 @@ class Player:
                 angle = base_angle + math.radians(angle_offset)
                 bullet = Bullet(self.rect.centerx, self.rect.centery, angle)
                 bullets.append(bullet)
+            self.shoot_sound.play()
             return bullets
         return None
 
@@ -163,6 +164,7 @@ class Player:
                 self.shots_left += 1
                 self.pouch_ammo -= 1
                 self.reload_start_time = now
+                shotguncock.play()
             if self.shots_left == self.max_shots or self.pouch_ammo == 0:
                 self.reloading = False
 
@@ -206,7 +208,7 @@ class Player:
         screen.blit(ammo_text, gun_ammo_text_pos)
 
         # Draw ammo in pouch
-        pouch_text = self.font.render(f"Prison wallet: {self.pouch_ammo}", True, (255, 255, 255))
+        pouch_text = self.font.render(f"Pouch: {self.pouch_ammo}", True, (255, 255, 255))
         screen.blit(pouch_text, pouch_ammo_text_pos)
 
     def draw_stamina_bar(self, screen):

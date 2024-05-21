@@ -5,7 +5,7 @@ from utilities import Bullet
 from map import GameMap
 from camera import Camera
 from defines import *
-shotguncock = pygame.mixer.Sound(Shotguncoking_sound)
+
 
 SCREEN_WIDTH = resolution[0]
 SCREEN_HEIGHT = resolution[1]
@@ -41,7 +41,6 @@ class Game:
     def handle_events(self, keys):
         # Handle shooting
         if keys[pygame.K_SPACE]:
-            shotguncock.play()
             new_bullets = self.player.shoot()
             if new_bullets:
                 self.bullets.extend(new_bullets)

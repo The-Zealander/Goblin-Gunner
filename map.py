@@ -57,7 +57,7 @@ class GameMap:
                 if (x + y) % 2 == 0:
                     color = tile_prop["color"]
                 else:
-                    color = defines.green
+                    color = defines.gray
                 rect = pygame.Rect(
                     x * self.tile_size - camera.rect.left,
                     y * self.tile_size - camera.rect.top,
