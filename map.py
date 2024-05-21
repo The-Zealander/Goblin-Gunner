@@ -6,6 +6,9 @@ from defines import map_width, map_height, map_tile_size
 
 class GameMap:
     def __init__(self):
+        self.ground_layer = []  # For ground tiles
+        self.top_layer = []  # For objects like trees and buildings
+        self.bottom_layer = []  # For objects like water
         self.width = map_width
         self.height = map_height
         self.tile_size = map_tile_size

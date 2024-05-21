@@ -9,7 +9,8 @@ FPS = 60
 
 # Font shit
 # Font types
-pixelfont = 'fonts/Pixelfy.ttf'
+pixelfont = 'fonts/PixeloidSans-mLxMm.ttf'
+#pixelfont = 'fonts/Pixelfy.ttf'
 # Define fonts
 TITLE_FONT = pygame.font.Font(pixelfont, 100)  # Font for titles
 MENU_FONT = pygame.font.Font(pixelfont, 75)  # Font for titles
