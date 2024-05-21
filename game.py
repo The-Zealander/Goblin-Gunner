@@ -6,9 +6,10 @@ from map import GameMap
 from camera import Camera
 from defines import *
 
-
 SCREEN_WIDTH = resolution[0]
 SCREEN_HEIGHT = resolution[1]
+
+
 class Game:
     def __init__(self):
         # Initialize game objects
@@ -29,13 +30,13 @@ class Game:
 
     def render(self, screen):
         # Fill the screen with black to avoid artifacts
-        screen.fill("BLACK")
+        screen.fill(black)
 
         self.game_map.draw(screen, self.camera)
         for enemy in self.enemies:
-            pygame.draw.rect(screen, (255, 0, 0), self.camera.apply(enemy))
+            pygame.draw.rect(screen, red, self.camera.apply(enemy))
         for bullet in self.bullets:
-            pygame.draw.rect(screen, (255, 255, 255), self.camera.apply(bullet))
+            pygame.draw.rect(screen, white, self.camera.apply(bullet))
         self.player.draw(screen, self.camera)
 
     def handle_events(self, keys):

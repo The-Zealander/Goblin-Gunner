@@ -1,11 +1,10 @@
-import pygame
 import moviepy.editor as mpy
-import defines
+from defines import *
 
 
 class MainMenu:
     def __init__(self):
-        self.font = defines.MENU_FONT
+        self.font = MENU_FONT
         self.options = ["START", "CONTROLS", "QUIT"]
         self.selected_option = 0
 
@@ -40,7 +39,7 @@ class MainMenu:
 
         # Render menu options
         for i, option in enumerate(self.options):
-            color = (defines.white) if i == self.selected_option else (defines.green)
+            color = white if i == self.selected_option else green
             text = self.font.render(option, True, color)
             text_rect = text.get_rect(center=(1350, 380 + i * 100))
             screen.blit(text, text_rect)

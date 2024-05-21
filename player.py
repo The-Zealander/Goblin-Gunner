@@ -2,10 +2,12 @@ import pygame
 from itertools import cycle
 import math
 import random
-import defines
+from defines import *
 from utilities import Bullet
 
-shotguncock = pygame.mixer.Sound(defines.Shotguncoking_sound)
+shotguncock = pygame.mixer.Sound(Shotguncoking_sound)
+
+
 def load_frames(frame_names):
     frames = []
     for name in frame_names:
@@ -72,7 +74,7 @@ class Player:
         self.health = 100
         self.max_health = 100
 
-        self.font = defines.SMALL_FONT
+        self.font = SMALL_FONT
 
         # Load UI images
         #self.health_image = pygame.image.load("sprites/ui/health_icon.png").convert_alpha()
