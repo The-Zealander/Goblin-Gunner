@@ -1,4 +1,6 @@
 import pygame
+
+import defines
 from terrain import TILE_PROPERTIES, TileType
 from defines import map_width, map_height, map_tile_size
 
@@ -51,9 +53,14 @@ class GameMap:
             for x in range(start_x, end_x):
                 tile = self.tiles[y][x]
                 tile_prop = TILE_PROPERTIES[tile]
+                # Check om koordinat er lige eller ulige og vælg farve ud fra det.
+                if (x + y) % 2 == 0:
+                    color = tile_prop["color"]
+                else:
+                    color = defines.green
                 rect = pygame.Rect(
                     x * self.tile_size - camera.rect.left,
                     y * self.tile_size - camera.rect.top,
                     self.tile_size, self.tile_size
                 )
-                pygame.draw.rect(screen, tile_prop["color"], rect)
+                pygame.draw.rect(screen, color, rect)
