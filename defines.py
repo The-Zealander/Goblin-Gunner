@@ -1,43 +1,43 @@
 import pygame
 
-# Initialize Pygame
+# Initialize the Pygame library, which is used for creating video games
 pygame.init()
 
-# Define resolution
+# Define the resolution of the game window
 resolution = (1920, 1080)
-FPS = 60
+FPS = 60  # Frames Per Second, which controls the game's speed
 
-# Font shit
-# Font types
+# Font settings
+# Define the path to the pixel font file
 pixelfont = 'fonts/PixeloidSans-mLxMm.ttf'
-#pixelfont = 'fonts/Pixelfy.ttf'
-# Define fonts
-TITLE_FONT = pygame.font.Font(pixelfont, 100)  # Font for titles
-MENU_FONT = pygame.font.Font(pixelfont, 75)  # Font for titles
-GENERAL_FONT = pygame.font.Font(pixelfont, 50)  # General font
-SMALL_FONT = pygame.font.Font(pixelfont, 25)  # Smaller font
-VERSION_FONT = pygame.font.Font(pixelfont, 12)  # Font for version info
 
-# Game name
-GAME_NAME = "Goblin Gunner"
-icon = pygame.image.load('images/goblin_logo.png')
+# Define different font sizes for various game elements
+TITLE_FONT = pygame.font.Font(pixelfont, 100)  # Font for titles, such as the game title
+MENU_FONT = pygame.font.Font(pixelfont, 75)  # Font for menu items
+GENERAL_FONT = pygame.font.Font(pixelfont, 50)  # General font for in-game text
+SMALL_FONT = pygame.font.Font(pixelfont, 25)  # Smaller font for minor details
+VERSION_FONT = pygame.font.Font(pixelfont, 12)  # Font for version information
 
-# Sounds
-BUTTON_CLICK_SOUND = "sounds/Button_sound.mp3"
-Shotguncoking_sound = "sounds/shotgun-cocking.mp3"
-Swing_sound = "sound/swing_sound.mp3"
-background_song = "sounds/Pixelated Adventure.mp3"
-Jens_Song = "sounds/Jens the Goblin.mp3"
+# Game metadata
+GAME_NAME = "Goblin Gunner"  # The title of the game
+icon = pygame.image.load('images/goblin_logo.png')  # The game's icon
+
+# Sound effects and music
+BUTTON_CLICK_SOUND = "sounds/Button_sound.mp3"  # Sound effect for button clicks
+Shotguncoking_sound = "sounds/shotgun-cocking.mp3"  # Sound effect for shotgun cocking
+Swing_sound = "sounds/swing_sound.mp3"  # Sound effect for swinging
+background_song = "sounds/Pixelated Adventure.mp3"  # Background music for the game
+Jens_Song = "sounds/Jens the Goblin.mp3"  # Music for a specific character or level
 
 
-# Define program version and state
+# Function to retrieve version information
 def get_version_info():
-    program_state = "Alpha"
-    program_version = "1"
-    menu_version = "1.1"
-    settings_version = "0.0"
-    gameplay_version = "0.5"
-    title_version = "1.5"
+    program_state = "Alpha"  # The current state of the game (e.g., Alpha, Beta, Release)
+    program_version = "1"  # The version number of the game
+    menu_version = "1.1"  # The version number of the menu system
+    settings_version = "0.0"  # The version number of the settings system
+    gameplay_version = "0.5"  # The version number of the gameplay mechanics
+    title_version = "1.5"  # The version number of the title screen
     return {
         "program_state": program_state,
         "program_version": program_version,
@@ -48,40 +48,39 @@ def get_version_info():
     }
 
 
-# Define common colors
+# Define common colors used throughout the game
+black = (0, 0, 0)  # RGB value for black
+silver = (192, 192, 192)  # RGB value for silver
+gray = (128, 128, 128)  # RGB value for gray
+white = (255, 255, 255)  # RGB value for white
+maroon = (128, 0, 0)  # RGB value for maroon
+red = (255, 0, 0)  # RGB value for red
+green = (0, 128, 0)  # RGB value for green
+lime = (0, 255, 0)  # RGB value for lime
+olive = (128, 128, 0)  # RGB value for olive
+yellow = (255, 255, 0)  # RGB value for yellow
+navy = (0, 0, 128)  # RGB value for navy
+blue = (0, 0, 255)  # RGB value for blue
+purple = (128, 0, 128)  # RGB value for purple
+fuchsia = (255, 0, 255)  # RGB value for fuchsia
+teal = (0, 128, 128)  # RGB value for teal
+aqua = (0, 255, 255)  # RGB value for aqua
+brown = (101, 67, 33)  # RGB value for brown
 
-black = (0, 0, 0)
-silver = (192, 192, 192)
-gray = (128, 128, 128)
-white = (255, 255, 255)
-maroon = (128, 0, 0)
-red = (255, 0, 0)
-green = (0, 128, 0)
-lime = (0, 255, 0)
-olive = (128, 128, 0)
-yellow = (255, 255, 0)
-navy = (0, 0, 128)
-blue = (0, 0, 255)
-purple = (128, 0, 128)
-fuchsia = (255, 0, 255)
-teal = (0, 128, 128)
-aqua = (0, 255, 255)
-brown = (101, 67, 33)
-
-# define various shit
-detec_rad = 10
-enemy_speed = 1
-big_enemy_speed = 1
-player_speed = 5
-b_speed = 100
-map_width = 100
-map_height = 100
-test_map_width = 50
-test_map_height = 50
-map_tile_size = 32
-player_size = 32
-small_enemey_size = 32
-big_enemy_size = 128
-enemy_melee_range = 5
-enemy_long_range = 100
-INVINCIBILITY_DURATION = 1  # 1 second invincibility after taking damage
+# Define various game constants
+detec_rad = 10  # Detection radius for enemies or other game objects
+enemy_speed = 1  # Speed of regular enemies
+big_enemy_speed = 1  # Speed of larger or more powerful enemies
+player_speed = 5  # Speed of the player character
+b_speed = 100  # Speed of bullets or projectiles
+map_width = 100  # Width of the game map
+map_height = 100  # Height of the game map
+test_map_width = 50  # Width of the test map
+test_map_height = 50  # Height of the test map
+map_tile_size = 32  # Size of individual map tiles
+player_size = 32  # Size of the player character
+small_enemey_size = 32  # Size of regular enemies
+big_enemy_size = 128  # Size of larger or more powerful enemies
+enemy_melee_range = 5  # Range of melee attacks for enemies
+enemy_long_range = 100  # Range of long-range attacks for enemies
+INVINCIBILITY_DURATION = 1  # Duration of invincibili

@@ -6,7 +6,7 @@ from defines import *
 from utilities import Bullet
 
 shotguncock = pygame.mixer.Sound(Shotguncoking_sound)
-swingsound = pygame.mixer.Sound()
+swingsound = pygame.mixer.Sound(Swing_sound)
 
 def load_frames(frame_names):
     frames = []
