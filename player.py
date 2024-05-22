@@ -8,6 +8,7 @@ from utilities import Bullet
 shotguncock = pygame.mixer.Sound(Shotguncoking_sound)
 swingsound = pygame.mixer.Sound(Swing_sound)
 
+
 def load_frames(frame_names):
     frames = []
     for name in frame_names:
@@ -19,7 +20,6 @@ def load_frames(frame_names):
             print(f"Error loading {name}: {e}")
             raise
     return frames
-
 
 
 class Direction:
@@ -43,6 +43,7 @@ class Player:
         self.stamina_sprint_cost = 10
         self.is_sprinting = False
         self.shoot_sound = pygame.mixer.Sound("sounds/gunshot.mp3")
+        self.slowed_until = 0
 
         down_frames = load_frames(["goblin_walk_down_{}.png".format(i) for i in range(1, 7)])
         up_frames = load_frames(["goblin_walk_up_{}.png".format(i) for i in range(1, 7)])
@@ -63,7 +64,7 @@ class Player:
         self.last_frame_time = 0
         self.direction = pygame.Vector2(0, 0)
 
-        # gun shit
+        # gun stuff
         self.last_shot_time = 0
         self.shot_cooldown = 500  # milliseconds
         self.max_shots = 2
@@ -72,16 +73,21 @@ class Player:
         self.reload_time_per_bullet = 1000  # milliseconds (1 second)
         self.reloading = False
         self.reload_start_time = 0
-        # health shit
+
+        # melee stuff
+        self.melee_cooldown = 250  # milliseconds
+        self.last_melee_time = 0
+        self.melee_range = 50  # pixels
+        self.melee_damage = 15
+
+        # health stuff
         self.health = 100
         self.max_health = 100
 
         self.font = SMALL_FONT
 
         # Load UI images
-        #self.health_image = pygame.image.load("sprites/ui/health_icon.png").convert_alpha()
         self.ammo_image = pygame.image.load("assets/Shotgunshell.png").convert_alpha()
-        #self.stamina_image = pygame.image.load("sprites/ui/stamina_icon.png").convert_alpha()
 
     def update(self, keys, dt):
         self.direction = pygame.Vector2(0, 0)
@@ -141,6 +147,9 @@ class Player:
         if self.reloading:
             self.reload()
 
+        if keys[pygame.K_SPACE]:
+            self.melee_attack()
+
     def shoot(self):
         now = pygame.time.get_ticks()
         if now - self.last_shot_time > self.shot_cooldown and self.shots_left > 0:
@@ -172,6 +181,28 @@ class Player:
             if self.shots_left == self.max_shots or self.pouch_ammo == 0:
                 self.reloading = False
 
+    def melee_attack(self):
+        now = pygame.time.get_ticks()
+        if now - self.last_melee_time > self.melee_cooldown:
+            self.last_melee_time = now
+            swingsound.play()
+            # Define the melee attack range
+            melee_rect = self.rect.inflate(self.melee_range, self.melee_range)
+            return melee_rect, self.melee_damage
+        return None, 0
+
+    def take_damage(self, damage):
+        self.health -= damage
+        if self.health < 0:
+            self.health = 0
+
+    def push_back(self, dx, dy):
+        self.rect.x += dx
+        self.rect.y += dy
+
+    def slow(self, duration):
+        self.slowed_until = pygame.time.get_ticks() + duration
+
     def draw(self, screen, camera):
         screen.blit(self.current_frame, camera.apply(self))
         self.draw_health_bar(screen)
@@ -190,7 +221,7 @@ class Player:
         health_bar_pos = (50, 10)
 
         # Draw health icon
-        #screen.blit(self.health_image, health_icon_pos)
+        # screen.blit(self.health_image, health_icon_pos)
 
         # Draw health bar background
         pygame.draw.rect(screen, (255, 0, 0), (*health_bar_pos, health_bar_length, health_bar_height))
@@ -227,7 +258,7 @@ class Player:
         stamina_bar_pos = (50, 100)
 
         # Draw stamina icon
-        #screen.blit(self.stamina_image, stamina_icon_pos)
+        # screen.blit(self.stamina_image, stamina_icon_pos)
 
         # Draw stamina bar background
         pygame.draw.rect(screen, (0, 0, 0), (*stamina_bar_pos, stamina_bar_length, stamina_bar_height))

@@ -15,7 +15,7 @@ class Game:
         # Initialize game objects
         self.game_map = GameMap()
         self.player = Player((map_width * map_tile_size) // 2, (map_height * map_tile_size) // 2)
-        self.enemies = [Enemy(100, 100), Enemy(200, 200)]
+        self.enemies = [Enemy(100, 100)]
         self.camera = Camera(SCREEN_WIDTH, SCREEN_HEIGHT)
         self.bullets = []
 
@@ -25,8 +25,10 @@ class Game:
         for bullet in self.bullets:
             bullet.update(dt)
         for enemy in self.enemies:
-            enemy.update(self.player.rect)
+            enemy.update(self.player.rect, dt)
         self.camera.update(self.player)
+        for enemy in self.enemies:
+            enemy.update(self.player.rect, dt)
 
     def render(self, screen):
         # Fill the screen with black to avoid artifacts
