@@ -6,18 +6,20 @@ from defines import *
 from utilities import Bullet
 
 shotguncock = pygame.mixer.Sound(Shotguncoking_sound)
-
+swingsound = pygame.mixer.Sound()
 
 def load_frames(frame_names):
     frames = []
     for name in frame_names:
         try:
             image = pygame.image.load(f"sprites/player_walking/{name}").convert_alpha()
-            frames.append(image)
+            scaled_image = pygame.transform.scale(image, (image.get_width() * 2, image.get_height() * 2))
+            frames.append(scaled_image)
         except pygame.error as e:
             print(f"Error loading {name}: {e}")
             raise
     return frames
+
 
 
 class Direction:
