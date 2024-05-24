@@ -1,7 +1,7 @@
 import pygame
 
 import defines
-from terrain import TILE_PROPERTIES, TileType
+from game_files.terrain import TILE_PROPERTIES, TileType
 from defines import map_width, map_height, map_tile_size
 
 class GameMap:

@@ -3,7 +3,7 @@ from itertools import cycle
 import math
 import random
 from defines import *
-from utilities import Bullet
+from game_files.utilities import Bullet
 
 shotguncock = pygame.mixer.Sound(Shotguncoking_sound)
 swingsound = pygame.mixer.Sound(Swing_sound)

@@ -3,8 +3,7 @@ import sys  # Import the sys module for system-specific functions
 import defines  # Import the defines module for game constants
 
 # Import game components
-from player import Player  # Import the Player class
-from game import Game  # Import the Game class that contains the game logic
+from game_files.game import Game  # Import the Game class that contains the game logic
 from titlescreen import TitleScreen  # Import the TitleScreen class
 from start_menu import MainMenu  # Import the MainMenu class
 from controls import ControlScreen  # Import the ControlScreen class
