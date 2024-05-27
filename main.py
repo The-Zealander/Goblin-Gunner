@@ -62,7 +62,7 @@ while running:
 
         if game_state == TITLE_SCREEN:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-                game_state = INTRO_VIDEO
+                game_state = MENU_SCREEN
 
 
         elif game_state == MENU_SCREEN:

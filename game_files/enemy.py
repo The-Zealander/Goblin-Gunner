@@ -1,6 +1,8 @@
+import random
 import pygame
 import math
 import game_files.player
+from game_files import player
 
 # Define constants for enemy speed, health, and detection range
 ENEMY_SPEED = 1

@@ -31,7 +31,7 @@ class Direction:
 
 class Player:
     def __init__(self, x, y):
-        self.rect = pygame.Rect(x, y, 32, 32)
+        self.rect = pygame.Rect(x, y, 64, 64)
         self.base_speed = 200  # Speed in pixels per second
         self.sprint_multiplier = 2
         self.speed = self.base_speed
