@@ -26,26 +26,38 @@ class Enemy:
 
     def update(self, player_rect, dt):
         # Calculate the difference in x and y coordinates between the enemy and the player
-        dx = player_rect.centerx - self.rect.centerx
-        dy = player_rect.centery - self.rect.centery
+        dx = player_rect.x - self.rect.x
+        dy = player_rect.y - self.rect.y
         # Calculate the distance between the enemy and the player
         distance = math.hypot(dx, dy)
 
         if distance < ENEMY_DETECTION_RANGE:
-            # Normalize the dx and dy values
-            if distance > 0:
-                dx /= distance
-                dy /= distance
 
             # Rotate the enemy to face the player
             self.angle = math.degrees(math.atan2(-dy, dx))
 
-            # Update the enemy's position to move forward
-            self.rect.x += dx * self.speed * dt
-            self.rect.y += dy * self.speed * dt
+            enemy_move_x = dx * dt
+            enemy_move_y = dy * dt
+            if enemy_move_x != 0 and enemy_move_y != 0:
+                enemy_move_x *= 1/math.sqrt(enemy_move_x**2 + enemy_move_y**2) * ENEMY_SPEED
+                enemy_move_y *= 1/math.sqrt(enemy_move_x**2 + enemy_move_y**2) * ENEMY_SPEED
+
+            if enemy_move_x > 0:
+                self.rect.x += math.ceil(enemy_move_x)
+            else:
+                self.rect.x -= math.ceil(enemy_move_x)
+
+            if enemy_move_y > 0:
+                self.rect.y += math.ceil(enemy_move_y)
+            else:
+                self.rect.y -= math.ceil(enemy_move_y)
 
             # Attempt to perform a slam attack
-            self.slam_attack(player_rect, distance)
+            #self.slam_attack(player_rect, distance)
+        #Bevæg enemy random retning (den får et seizure, men det ligemeget)
+        else:
+            self.rect.x += random.choice([ENEMY_SPEED*7, ENEMY_SPEED*-7])
+            self.rect.y += random.choice([ENEMY_SPEED*7, ENEMY_SPEED*-7])
 
     def take_damage(self, damage):
         # Subtract the damage from the enemy's health

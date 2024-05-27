@@ -32,7 +32,7 @@ class Direction:
 class Player:
     def __init__(self, x, y):
         self.rect = pygame.Rect(x, y, 32, 32)
-        self.base_speed = 100  # Speed in pixels per second
+        self.base_speed = 200  # Speed in pixels per second
         self.sprint_multiplier = 2
         self.speed = self.base_speed
         # stamina
@@ -89,8 +89,10 @@ class Player:
         # Load UI images
         self.ammo_image = pygame.image.load("assets/Shotgunshell.png").convert_alpha()
 
+
     def update(self, keys, dt):
         self.direction = pygame.Vector2(0, 0)
+
         if keys[pygame.K_w]:
             self.direction.y = -1
             self.current_animation = Direction.UP
