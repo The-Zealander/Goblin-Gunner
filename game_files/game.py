@@ -1,9 +1,9 @@
 import pygame
-from player import Player
-from enemy import Enemy
-from utilities import Bullet
-from map import GameMap
-from camera import Camera
+from game_files.player import Player
+from game_files.enemy import Enemy
+from game_files.utilities import Bullet
+from game_files.map import GameMap
+from game_files.camera import Camera
 from defines import *
 
 SCREEN_WIDTH = resolution[0]
