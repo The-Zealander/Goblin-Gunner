@@ -1,7 +1,7 @@
 import pygame
 import math
 import random
-import player
+from player import Player
 
 # Define constants for enemy speed, health, and detection range
 ENEMY_SPEED = 1
@@ -54,11 +54,12 @@ class Enemy:
                 self.rect.y -= math.ceil(enemy_move_y)
 
             # Attempt to perform a slam attack
-            #self.slam_attack(player_rect, distance)
+            return self.slam_attack(player_rect, distance)
         #Bevæg enemy random retning (den får et seizure, men det ligemeget)
         else:
             self.rect.x += random.choice([ENEMY_SPEED*7, ENEMY_SPEED*-7])
             self.rect.y += random.choice([ENEMY_SPEED*7, ENEMY_SPEED*-7])
+            return False
 
     def take_damage(self, damage):
         # Subtract the damage from the enemy's health
@@ -72,12 +73,12 @@ class Enemy:
         if now - self.last_slam_time > ENEMY_SLAM_COOLDOWN and distance <= ENEMY_SLAM_RANGE:
             self.last_slam_time = now
             if self.rect.colliderect(player_rect):
-                self.handle_slam_hit(player_rect)
+                return True
+            else:
+                return False
+
 
     def handle_slam_hit(self, player_rect):
-        # Apply damage to the player (you need to implement player.take_damage() method)
-        player.take_damage(ENEMY_SLAM_DAMAGE)
-
         # Apply pushback (assuming the player has a push_back(dx, dy) method)
         dx = player_rect.centerx - self.rect.centerx
         dy = player_rect.centery - self.rect.centery
@@ -85,10 +86,10 @@ class Enemy:
         if distance > 0:
             dx /= distance
             dy /= distance
-        player.push_back(dx * ENEMY_SLAM_PUSHBACK, dy * ENEMY_SLAM_PUSHBACK)
+        Player.push_back(dx * ENEMY_SLAM_PUSHBACK, dy * ENEMY_SLAM_PUSHBACK)
 
         # Apply slow effect to the player (assuming the player has a slow(duration) method)
-        player.slow(ENEMY_SLAM_SLOW_DURATION)
+        Player.slow(ENEMY_SLAM_SLOW_DURATION)
 
     def draw(self, screen):
         # Rotate the image to face the player

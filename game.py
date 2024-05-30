@@ -29,6 +29,8 @@ class Game:
         self.camera.update(self.player)
         for enemy in self.enemies:
             enemy.update(self.player.rect, dt)
+            self.player.take_damage(20)
+
 
     def render(self, screen):
         # Fill the screen with black to avoid artifacts

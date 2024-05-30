@@ -194,7 +194,8 @@ class Player:
         return None, 0
 
     def take_damage(self, damage):
-        self.health -= damage
+        self.health = self.health - damage
+        print(self.health)
         if self.health < 0:
             self.health = 0
 
