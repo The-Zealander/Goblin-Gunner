@@ -1,7 +1,7 @@
 import pygame
 import math
 import random
-from player import Player
+from game_files.player import Player
 
 # Define constants for enemy speed, health, and detection range
 ENEMY_SPEED = 1
@@ -18,7 +18,7 @@ class Enemy:
     def __init__(self, x, y):
         # Initialize the enemy's rectangle with the given x and y coordinates, and a size of 32x32
         self.rect = pygame.Rect(x, y, 32, 32)
-        self.image = pygame.image.load("assets/enemy images/top-car-view-png-34878.png").convert_alpha()
+        self.image = pygame.image.load("assets/enemy images/ford_focus.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (32, 32))  # Scale image to the size of the rect
         self.speed = ENEMY_SPEED
         self.health = ENEMY_HEALTH

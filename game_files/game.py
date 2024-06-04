@@ -5,19 +5,23 @@ from game_files.utilities import Bullet
 from game_files.map import GameMap
 from game_files.camera import Camera
 from defines import *
+import random
 
 SCREEN_WIDTH = resolution[0]
 SCREEN_HEIGHT = resolution[1]
-
+enemy_amount = 10
 
 class Game:
     def __init__(self):
         # Initialize game objects
         self.game_map = GameMap()
         self.player = Player((map_width * map_tile_size) // 2, (map_height * map_tile_size) // 2)
-        self.enemies = [Enemy(100, 100)]
+        self.enemies = []
         self.camera = Camera(SCREEN_WIDTH, SCREEN_HEIGHT)
         self.bullets = []
+        for enemy in range (enemy_amount):
+            enemy = Enemy(random.choice((0,1000)), random.choice((0,1000)))
+            self.enemies.append(enemy) #Tilføjer enemies til listen
 
     def update(self, dt, keys):
         # Update game logic
